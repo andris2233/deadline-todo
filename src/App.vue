@@ -1,10 +1,10 @@
 <template>
   <div id="app">
     <div id="nav">
-      <div class="header">Tasks</div>
+      <div class="header">Задачи</div>
       <div class="nav-menu">
-        <router-link to="/" class="nav-link">Create</router-link>
-        <router-link to="/list" class="nav-link">List</router-link>
+        <router-link to="/" class="nav-link">Создать</router-link>
+        <router-link to="/list" class="nav-link">Список</router-link>
       </div>
     </div>
     <transition name="router" tag="div" mode="out-in">
@@ -63,7 +63,7 @@
   font-weight: bold;
   color: #fff;
   text-decoration: none;
-  width: 70px;
+  width: 90px;
   height: 70px;
 }
 

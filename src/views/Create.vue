@@ -1,11 +1,15 @@
 <template>
-    <form @submit.prevent>
+    <form>
         <div class="create-header">Создать задачу</div>
         <InputText 
             v-bind:text="title"
             v-bind:placeholder="'Название'"
             @v-model="changeTitle"
         />
+        <TextArea 
+            v-bind:text="description"
+            v-bind:placeholder="'Описание'"
+            @v-model="changeDescription"/>
         <Chips 
             v-bind:tags="tags" 
             v-bind:placeholder="'Тэги'"
@@ -17,7 +21,7 @@
             @v-model="changeDeadline"
             v-bind:date="date"
         />
-        <button type="submit">Создать</button>
+        <button type="button" @click="createTask" :disabled="!formValid">Создать</button>
     </form>
 </template>
 
@@ -25,15 +29,22 @@
 import Chips from '@/components/Chips';
 import InputText from '@/components/InputText';
 import Datepicker from '@/components/Datepicker';
+import TextArea from '@/components/TextArea';
 export default {
     data () {
         return {
             title: '',
             tags: [],
+            description: '',
             date: null
         }
     },
-    components: { Chips, InputText, Datepicker },
+    computed: {
+        formValid(){
+            return this.title.trim().length && this.tags.length && this.description.trim().length && this.date;
+        }
+    },
+    components: { Chips, InputText, Datepicker, TextArea },
     methods: {
         createTag(tag) {
             this.tags.push(tag);
@@ -46,6 +57,20 @@ export default {
         },
         changeDeadline(date){
             this.date = date;
+        },
+        changeDescription(description){
+            this.description = description;
+        },
+        createTask(){
+            this.$store.dispatch('createTask', {
+                id: Date.now(),
+                title: this.title,
+                tags: this.tags,
+                description: this.description,
+                date: this.date.getTime(),
+                status: 'active'
+            });
+            this.$router.push('/list');
         }
     }
 }
@@ -89,6 +114,19 @@ button:hover{
 }
 
 button:active{
+    transform: scale(1);
+}
+
+button:disabled{
+    background: gray;
+    color: white;
+    opacity: .5;
+}
+
+button:disabled:hover{
+    background: gray;
+    color: white;
+    box-shadow: none;
     transform: scale(1);
 }
 
