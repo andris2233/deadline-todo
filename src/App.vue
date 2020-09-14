@@ -1,32 +1,86 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Create</router-link> |
-      <router-link to="/list">List</router-link>
+      <div class="header">Tasks</div>
+      <div class="nav-menu">
+        <router-link to="/" class="nav-link">Create</router-link>
+        <router-link to="/list" class="nav-link">List</router-link>
+      </div>
     </div>
-    <router-view/>
+    <transition name="router" tag="div" mode="out-in">
+      <router-view/>
+    </transition>
   </div>
 </template>
 
 <style>
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  /* text-align: center; */
   color: #2c3e50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* overflow-x: hidden; */
+  
+  /* height: 100%; */
 }
 
 #nav {
-  padding: 30px;
+  padding-left: 15px;
+  background: #328BCA;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  box-sizing: content-box;
+  margin: 0;
+  margin-bottom: 15px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-#nav a {
+.header{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 25px;
+  font-weight: 600;
+}
+
+.nav-menu{
+  display: flex;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all ease .3s;
   font-weight: bold;
-  color: #2c3e50;
+  color: #fff;
+  text-decoration: none;
+  width: 70px;
+  height: 70px;
+}
+
+.nav-link:hover{
+  background: #49A0DE;
 }
 
 #nav a.router-link-exact-active {
-  color: #42b983;
+  background: #1D6CA5;
+}
+
+.router-enter-active, .router-leave-active{
+  transition: .3s;
+}
+
+.router-enter, .router-leave-to{
+    transform: scale(0);
+    opacity: 0;
 }
 </style>
