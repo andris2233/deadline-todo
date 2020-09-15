@@ -2,10 +2,9 @@
     <div class="input-wrapper" v-bind:class="{inputActiveLine: focused}">
         <div class="input-placeholder" v-bind:class="{placeholderActive: inputText.trim().length || focused}">{{placeholder ? placeholder : 'Text'}}</div>
         <input type="text" 
-            v-model="inputText"
             @focus="focused=true"
             @blur="focused=false"
-            @input="$emit('v-model', inputText)">
+            @input="$emit('input', $event.target.value); inputText = $event.target.value">
     </div>
 </template>
 

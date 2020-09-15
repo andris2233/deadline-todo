@@ -2,8 +2,7 @@
     <div class="datepicker-wrapper" v-bind:class="{datepickerActiveLine: focused}">
         <div class="datepicker-placeholder" v-bind:class="{datepickerPlaceholderActive: dateInput || focused}">{{placeholder ? placeholder : 'Дата'}}</div>
         <input type="date" 
-            v-model="dateInput" 
-            @change="$emit('v-model', new Date(dateInput))"
+            @input="$emit('input', new Date($event.target.value)); dateInput = $event.target.value;"
             @focus="focused=true"
             @blur="focused=false"
             v-bind:class="{invisible: !dateInput && !focused}"

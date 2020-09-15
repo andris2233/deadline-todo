@@ -4,12 +4,12 @@
         <InputText 
             v-bind:text="title"
             v-bind:placeholder="'Название'"
-            @v-model="changeTitle"
+            v-model="title"
         />
         <TextArea 
             v-bind:text="description"
             v-bind:placeholder="'Описание'"
-            @v-model="changeDescription"/>
+            v-model="description"/>
         <Chips 
             v-bind:tags="tags" 
             v-bind:placeholder="'Тэги'"
@@ -18,7 +18,7 @@
         />
         <Datepicker 
             v-bind:placeholder="'Дедлайн'"
-            @v-model="changeDeadline"
+            v-model="date"
             v-bind:date="date"
         />
         <button type="button" @click="createTask" :disabled="!formValid">Создать</button>

@@ -5,10 +5,9 @@
                 {{placeholder ? placeholder : 'Description'}}
             </div>
         <textarea class="textarea" 
-            v-model="description"
             @focus="focused=true"
             @blur="focused=false"
-            @change="$emit('v-model', description)"
+            @input="$emit('input', $event.target.value); description = $event.target.value;"
         >
         </textarea>
     </div>

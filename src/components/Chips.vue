@@ -62,6 +62,9 @@ export default {
         },
         removeTag(id){
             this.$emit('remove-tag', id);
+        },
+        stopPropogate(e){
+            e.stopPropogation();
         }
     }
 }
