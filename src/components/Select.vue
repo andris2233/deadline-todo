@@ -132,7 +132,7 @@ export default {
 
 .option {
   cursor: pointer;
-  padding: 7px 10px;
+  padding: 10px;
   border-bottom: 1px solid #dadada;
   transition: all ease 0.2s;
   box-sizing: border-box;
