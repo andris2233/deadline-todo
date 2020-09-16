@@ -1,133 +1,164 @@
 <template>
-    <form>
-        <div class="create-header">Создать задачу</div>
-        <InputText 
-            v-bind:text="title"
-            v-bind:placeholder="'Название'"
-            v-model="title"
+  <form>
+    <div class="form-element__wrapper">
+      <div class="create-header">Создать задачу</div>
+    </div>
+
+    <div class="form-content">
+      <div class="form-element__wrapper">
+        <InputText v-bind:text="title" v-bind:placeholder="'Название'" v-model="title" />
+      </div>
+
+      <div class="form-element__wrapper">
+        <TextArea v-bind:text="description" v-bind:placeholder="'Описание'" v-model="description" />
+      </div>
+
+      <div class="form-element__wrapper">
+        <Chips
+          v-bind:tags="tags"
+          v-bind:placeholder="'Тэги'"
+          @create-tag="createTag"
+          @remove-tag="removeTag"
         />
-        <TextArea 
-            v-bind:text="description"
-            v-bind:placeholder="'Описание'"
-            v-model="description"/>
-        <Chips 
-            v-bind:tags="tags" 
-            v-bind:placeholder="'Тэги'"
-            @create-tag="createTag"
-            @remove-tag="removeTag"
-        />
-        <Datepicker 
-            v-bind:placeholder="'Дедлайн'"
-            v-model="date"
-            v-bind:date="date"
-        />
-        <button type="button" @click="createTask" :disabled="!formValid">Создать</button>
-    </form>
+      </div>
+      <div class="form-element__wrapper">
+        <Datepicker v-bind:placeholder="'Дедлайн'" v-model="date" v-bind:date="date" />
+      </div>
+      <button type="button" @click="createTask" :disabled="!formValid">Создать</button>
+    </div>
+  </form>
 </template>
 
 <script>
-import Chips from '@/components/Chips';
-import InputText from '@/components/InputText';
-import Datepicker from '@/components/Datepicker';
-import TextArea from '@/components/TextArea';
+import Chips from "@/components/Chips";
+import InputText from "@/components/InputText";
+import Datepicker from "@/components/Datepicker";
+import TextArea from "@/components/TextArea";
 export default {
-    data () {
-        return {
-            title: '',
-            tags: [],
-            description: '',
-            date: null
-        }
+  data() {
+    return {
+      title: "",
+      tags: [],
+      description: "",
+      date: null,
+    };
+  },
+  computed: {
+    formValid() {
+      return (
+        this.title.trim().length &&
+        this.tags.length &&
+        this.description.trim().length &&
+        this.date
+      );
     },
-    computed: {
-        formValid(){
-            return this.title.trim().length && this.tags.length && this.description.trim().length && this.date;
-        }
+  },
+  components: { Chips, InputText, Datepicker, TextArea },
+  methods: {
+    createTag(tag) {
+      this.tags.push(tag);
     },
-    components: { Chips, InputText, Datepicker, TextArea },
-    methods: {
-        createTag(tag) {
-            this.tags.push(tag);
-        },
-        removeTag(id) {
-            this.tags = this.tags.filter(tag => tag.id !== id);
-        },
-        changeTitle(title){
-            this.title = title;
-        },
-        changeDeadline(date){
-            this.date = date;
-        },
-        changeDescription(description){
-            this.description = description;
-        },
-        createTask(){
-            this.$store.dispatch('createTask', {
-                id: Date.now(),
-                title: this.title,
-                tags: this.tags,
-                description: this.description,
-                date: this.date.getTime(),
-                status: 'active'
-            });
-            this.$router.push('/list');
-        }
-    }
-}
+    removeTag(id) {
+      this.tags = this.tags.filter((tag) => tag.id !== id);
+    },
+    changeTitle(title) {
+      this.title = title;
+    },
+    changeDeadline(date) {
+      this.date = date;
+    },
+    changeDescription(description) {
+      this.description = description;
+    },
+    createTask() {
+      this.$store.dispatch("createTask", {
+        id: Date.now(),
+        title: this.title,
+        tags: this.tags,
+        description: this.description,
+        date: this.date.getTime(),
+        status: "active",
+      });
+      this.$router.push("/list");
+    },
+  },
+};
 </script>
 
 <style scoped>
-form{
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    width: 750px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px #dadada;
-    padding: 45px;
-    box-sizing: border-box;
-    border: 10px solid #328BCA;
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 600px;
+  border-radius: 7px;
+  box-shadow: 0 0 2px #c2c2c2;
+  box-sizing: border-box;
+  /* border: 2px solid #328bca; */
+  background: #fff;
+  border: 1px solid #dadada;
+  overflow: hidden;
 }
 
-.create-header{
-    font-size: 25px;
-    font-weight: 600;
-    margin-bottom: 10px;
+.form-content {
+  flex: 1;
+  padding: 0 45px 45px 45px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
-button{
-    border: 0;
-    background: #328BCA;
-    padding: 10px;
-    border-radius: 20px;
-    transition: all ease .3s;
-    color: white;
-    width: 90px;
-    outline: none;
+.form-element__wrapper {
+  margin-bottom: 10px;
 }
 
-button:hover{
-    transform: scale(1.1);
-    background: white;
-    box-shadow: 0 0 7px #328BCA;
-    color: #328BCA;
+.create-header {
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  padding: 30px 0;
+  background: #fcfcfc;
+  border-bottom: 1px solid #dadada;
+  color: #3f3f3f;
 }
 
-button:active{
-    transform: scale(1);
+button {
+  border: 0;
+  background: #328bca;
+  padding: 8px 0;
+  border-radius: 20px;
+  transition: all ease 0.3s;
+  color: white;
+  width: 110px;
+  outline: none;
+  box-shadow: 0 0px 5px #328bca;
 }
 
-button:disabled{
-    background: gray;
-    color: white;
-    opacity: .5;
+button:hover {
+  transform: scale(1.1);
+  background: white;
+  box-shadow: 0 0px 10px #328bca;
+  color: #328bca;
 }
 
-button:disabled:hover{
-    background: gray;
-    color: white;
-    box-shadow: none;
-    transform: scale(1);
+button:active {
+  transform: scale(1);
 }
 
+button:disabled,
+button:disabled:hover {
+  background: #328bca;
+  box-shadow: 0 0px 5px #328bca;
+  color: white;
+  opacity: 0.5;
+  transform: scale(1);
+}
+
+/* button:disabled:hover {
+  background: #328bca;
+  box-shadow: 0 5px 5px #328bca;
+  color: white;
+  box-shadow: none;
+  transform: scale(1);
+} */
 </style>

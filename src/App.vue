@@ -8,30 +8,27 @@
       </div>
     </div>
     <transition name="router" tag="div" mode="out-in">
-      <router-view/>
+      <router-view />
     </transition>
   </div>
 </template>
 
 <style>
-
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* text-align: center; */
   color: #2c3e50;
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* overflow-x: hidden; */
-  
-  /* height: 100%; */
+  height: 100vh;
+  background: #383838;
 }
 
 #nav {
   padding-left: 15px;
-  background: #328BCA;
+  background: #328bca;
   display: flex;
   align-items: stretch;
   justify-content: space-between;
@@ -42,7 +39,7 @@
   box-sizing: border-box;
 }
 
-.header{
+.header {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -51,7 +48,7 @@
   font-weight: 600;
 }
 
-.nav-menu{
+.nav-menu {
   display: flex;
 }
 
@@ -59,7 +56,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all ease .3s;
+  transition: all ease 0.3s;
   font-weight: bold;
   color: #fff;
   text-decoration: none;
@@ -67,20 +64,22 @@
   height: 70px;
 }
 
-.nav-link:hover{
-  background: #49A0DE;
+.nav-link:hover {
+  background: #49a0de;
 }
 
 #nav a.router-link-exact-active {
-  background: #1D6CA5;
+  background: #1d6ca5;
 }
 
-.router-enter-active, .router-leave-active{
-  transition: .3s;
+.router-enter-active,
+.router-leave-active {
+  transition: 0.3s;
 }
 
-.router-enter, .router-leave-to{
-    transform: scale(0);
-    opacity: 0;
+.router-enter,
+.router-leave-to {
+  transform: scale(0);
+  opacity: 0;
 }
 </style>
