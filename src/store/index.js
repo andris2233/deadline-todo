@@ -38,6 +38,9 @@ export default new Vuex.Store({
   getters: {
     getAllTasks(state) {
       return state.tasks;
+    },
+    taskById(state) {
+      return id => state.tasks.find(task => task.id === +id);
     }
   }
 })

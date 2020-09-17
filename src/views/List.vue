@@ -15,9 +15,11 @@
       </div>
       <div class="task-row" v-for="(task, index) in tasks" :key="task.id">
         <div class="cell normal-cell">{{index + 1}}</div>
-        <div class="cell normal-cell">{{task.title}}</div>
+        <div class="cell normal-cell">
+          <router-link :to="'/task/' + task.id">{{task.title}}</router-link>
+        </div>
         <div class="cell big-cell">{{task.description}}</div>
-        <div class="cell normal-cell">{{new Date(task.date).toDateString()}}</div>
+        <div class="cell normal-cell">{{new Date(task.date).toLocaleDateString()}}</div>
         <div class="cell normal-cell">{{task.status | statusFormat}}</div>
         <div class="cell normal-cell">
           <button @click="$store.dispatch('completeTask', index)">Завершить</button>
@@ -123,7 +125,6 @@ export default {
 .task-row {
   display: flex;
   align-items: center;
-  /* justify-content: space-between; */
   padding: 10px 0;
   border-bottom: 1px solid #dadada;
 }
@@ -142,5 +143,51 @@ export default {
 
 .big-cell {
   flex: 2;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+a {
+  display: inline-block;
+  color: green;
+  text-decoration: none;
+  overflow: hidden;
+  transition: 0.2s;
+  position: relative;
+  /* padding: 0 0 4px 0; */
+}
+
+a:visited {
+  color: green;
+}
+
+/* a:before {
+  content: "";
+  height: 1px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: green;
+  transform: translateX(-100%);
+  transition: 0.2s;
+} */
+
+a:after {
+  content: "";
+  height: 2px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: green;
+  transform: scaleX(0);
+  transition: 0.2s;
+}
+
+/* a:hover:before, */
+a:hover:after {
+  transform: scaleX(1);
 }
 </style>

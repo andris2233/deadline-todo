@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
-  const routes = [
+const routes = [
   {
     path: '/',
     name: 'Create',
@@ -15,7 +15,7 @@ Vue.use(VueRouter)
     component: () => import('../views/List.vue')
   },
   {
-    path: '/task:id',
+    path: '/task/:id',
     name: 'Task',
     component: () => import('../views/Task.vue')
   }

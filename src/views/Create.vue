@@ -1,7 +1,7 @@
 <template>
   <form>
     <div class="form-element__wrapper">
-      <div class="create-header">Создать задачу</div>
+      <FormHeader :value="'Создать задачу'" />
     </div>
 
     <div class="form-content">
@@ -24,7 +24,7 @@
       <div class="form-element__wrapper">
         <Datepicker v-bind:placeholder="'Дедлайн'" v-model="date" v-bind:date="date" />
       </div>
-      <button type="button" @click="createTask" :disabled="!formValid">Создать</button>
+      <FormButton :type="'button'" @click="createTask" :disabled="!formValid">{{'Создать'}}</FormButton>
     </div>
   </form>
 </template>
@@ -34,6 +34,9 @@ import Chips from "@/components/Chips";
 import InputText from "@/components/InputText";
 import Datepicker from "@/components/Datepicker";
 import TextArea from "@/components/TextArea";
+import FormHeader from "@/components/FormHeader";
+import FormButton from "@/components/FormButton";
+
 export default {
   data() {
     return {
@@ -53,7 +56,14 @@ export default {
       );
     },
   },
-  components: { Chips, InputText, Datepicker, TextArea },
+  components: {
+    Chips,
+    InputText,
+    Datepicker,
+    TextArea,
+    FormHeader,
+    FormButton,
+  },
   methods: {
     createTag(tag) {
       this.tags.push(tag);
@@ -94,7 +104,6 @@ form {
   border-radius: 7px;
   box-shadow: 0 0 2px #c2c2c2;
   box-sizing: border-box;
-  /* border: 2px solid #328bca; */
   background: #fff;
   border: 1px solid #dadada;
   overflow: hidden;
