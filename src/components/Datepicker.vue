@@ -3,13 +3,15 @@
     <label
       class="datepicker-placeholder"
       v-bind:class="{datepickerPlaceholderActive: dateInput || focused}"
-    >{{placeholder ? placeholder : 'Дата'}}</label>
+    >{{placeholder}}</label>
     <input
       type="date"
-      @input="$emit('input', new Date($event.target.value)); dateInput = $event.target.value;"
+      v-model="dateInput"
+      @input="$emit('input', new Date($event.target.value));"
       @focus="focused=true"
       @blur="focused=false"
       v-bind:class="{invisible: !dateInput && !focused}"
+      :disabled="disabled"
     />
   </div>
 </template>
@@ -20,10 +22,16 @@ export default {
     placeholder: {
       type: String,
       required: false,
+      default: "Date",
     },
     date: {
       type: Date,
       required: false,
+    },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
   data() {
@@ -33,8 +41,12 @@ export default {
     };
   },
   mounted() {
-    if (this.$props.date && new Date(this.$props.date) != "Invalid Date") {
-      this.dateInput = new Date(this.$props.date);
+    const { date } = this.$props;
+    if (date) {
+      this.dateInput = `${date.getFullYear()}-${(
+        "0" +
+        (date.getMonth() + 1)
+      ).substr(-2)}-${("0" + date.getDate()).substr(-2)}`;
     }
   },
 };

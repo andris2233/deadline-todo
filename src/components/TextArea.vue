@@ -3,12 +3,14 @@
     <div
       class="textarea__placeholder"
       v-bind:class="{textarea__placeholderActive: focused || description.trim().length}"
-    >{{placeholder ? placeholder : 'Description'}}</div>
+    >{{placeholder}}</div>
     <textarea
       class="textarea"
       @focus="focused=true"
       @blur="focused=false"
-      @input="$emit('input', $event.target.value); description = $event.target.value;"
+      v-model="description"
+      @input="$emit('input', $event.target.value);"
+      :disabled="disabled"
     ></textarea>
   </div>
 </template>
@@ -19,10 +21,16 @@ export default {
     placeholder: {
       type: String,
       required: false,
+      default: "Description",
     },
     text: {
       type: String,
       required: false,
+    },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
   data() {
@@ -46,13 +54,14 @@ export default {
   flex-direction: column;
   align-items: stretch;
   box-sizing: border-box;
-  padding: 20px 10px 10px 10px;
+  padding: 20px 10px 0px 10px;
   height: 130px;
   width: 100%;
   border-radius: 10px;
   border: 1px solid #c2c2c2;
   transition: all ease 0.3s;
   overflow: hidden;
+  background: #fff;
 }
 
 .textarea__placeholder {
@@ -76,7 +85,7 @@ export default {
   border: 0;
   margin: 0;
   padding: 0;
-  background: none;
+  background: #fff;
   outline: none;
 }
 

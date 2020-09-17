@@ -5,10 +5,10 @@
       class="tags__placeholder"
       v-bind:class="{placeholderActive: tags.length || focused || tag.trim().length}"
       key="placeholder"
-    >{{placeholder ? placeholder : 'Tags'}}</label>
+    >{{placeholder}}</label>
     <div class="tag" v-for="tag in tags" :key="tag.id">
       <div class="tag-name">{{tag.name}}</div>
-      <i class="material-icons close" @click="removeTag(tag.id)">close</i>
+      <i class="material-icons close" @click="removeTag(tag.id)" v-if="!disabled">close</i>
     </div>
     <input
       type="text"
@@ -20,6 +20,7 @@
       v-model="tag"
       autocomplete="off"
       key="input"
+      :disabled="disabled"
     />
   </transition-group>
 </template>
@@ -34,6 +35,12 @@ export default {
     placeholder: {
       type: String,
       required: false,
+      default: "Tags",
+    },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
   data() {
@@ -133,6 +140,7 @@ export default {
   background: #328bca;
   color: white;
   margin: 0 5px 5px 0;
+  min-width: 40px;
 }
 
 input {
