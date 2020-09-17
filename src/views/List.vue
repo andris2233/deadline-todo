@@ -22,8 +22,16 @@
         <div class="cell normal-cell">{{new Date(task.date).toLocaleDateString()}}</div>
         <div class="cell normal-cell">{{task.status | statusFormat}}</div>
         <div class="cell normal-cell">
-          <button @click="$store.dispatch('completeTask', index)">Завершить</button>
-          <button @click="$store.dispatch('removeTask', task.id)">Удалить</button>
+          <TableButton
+            :theme="'green'"
+            class="button-margin"
+            @click="$store.dispatch('completeTask', task.id)"
+          >
+            <i class="material-icons">done</i>
+          </TableButton>
+          <TableButton :theme="'red'" @click="$store.dispatch('removeTask', task.id)">
+            <i class="material-icons">delete</i>
+          </TableButton>
         </div>
       </div>
     </div>
@@ -32,6 +40,7 @@
 
 <script>
 import Select from "@/components/Select";
+import TableButton from "@/components/TableButton";
 export default {
   data() {
     return {
@@ -82,7 +91,7 @@ export default {
       }
     },
   },
-  components: { Select },
+  components: { Select, TableButton },
 };
 </script>
 
@@ -97,6 +106,7 @@ export default {
   background: #fff;
   overflow: hidden;
   min-height: 50vh;
+  max-height: 90vh;
 }
 
 .task-list__header {
@@ -118,7 +128,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  padding: 0 20px;
+  padding: 0 20px 20px 20px;
   flex: 1;
 }
 
@@ -155,24 +165,11 @@ a {
   overflow: hidden;
   transition: 0.2s;
   position: relative;
-  /* padding: 0 0 4px 0; */
 }
 
 a:visited {
   color: green;
 }
-
-/* a:before {
-  content: "";
-  height: 1px;
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  background: green;
-  transform: translateX(-100%);
-  transition: 0.2s;
-} */
 
 a:after {
   content: "";
@@ -186,8 +183,11 @@ a:after {
   transition: 0.2s;
 }
 
-/* a:hover:before, */
 a:hover:after {
   transform: scaleX(1);
+}
+
+.button-margin {
+  margin: 0 7px 0 0;
 }
 </style>
