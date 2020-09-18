@@ -16,28 +16,32 @@
       <FormElementWrapper>
         <TextArea :disabled="disabled" v-model="taskCopy.description" />
       </FormElementWrapper>
+
       <FormElementWrapper>
         <Chips :disabled="disabled" :tags="taskCopy.tags" />
       </FormElementWrapper>
+
       <FormElementWrapper>
         <Datepicker :disabled="disabled" :date="taskCopy.date" v-model="taskCopy.date" />
       </FormElementWrapper>
 
-      <!-- <FormElementWrapper> -->
-      <div v-if="disabled">
-        <TableButton @click="completeTask" :theme="'green'" class="button-margin">
-          <i class="material-icons">done</i>
-        </TableButton>
-        <TableButton @click="removeTask" :theme="'red'">
-          <i class="material-icons">delete</i>
-        </TableButton>
-      </div>
+      <transition name="buttons" mode="out-in">
+        <div v-if="disabled" :key="'not-edit'">
+          <TableButton @click="completeTask" :theme="'green'" class="button-margin">
+            <i class="material-icons">done</i>
+          </TableButton>
+          <TableButton @click="removeTask" :theme="'red'">
+            <i class="material-icons">delete</i>
+          </TableButton>
+        </div>
 
-      <div v-else>
-        <FormButton @click="saveTask" class="button-margin">{{'Сохранить'}}</FormButton>
-        <FormButton @click="cancelChanges">{{'Отмена'}}</FormButton>
-      </div>
-      <!-- </FormElementWrapper> -->
+        <div v-else :key="'edit'">
+          <FormButton @click="saveTask" class="button-margin">{{'Сохранить'}}</FormButton>
+          <FormButton @click="cancelChanges">{{'Отмена'}}</FormButton>
+        </div>
+      </transition>
+
+      <!-- <Datepickerv2 v-model="taskCopy.date" /> -->
     </div>
   </div>
 </template>
@@ -46,6 +50,7 @@
 import TextArea from "@/components/TextArea";
 import Chips from "@/components/Chips";
 import Datepicker from "@/components/Datepicker";
+import Datepickerv2 from "@/components/Datepickerv2";
 import FormHeader from "@/components/FormHeader";
 import FormElementWrapper from "@/components/FormElementWrapper";
 import FormButton from "@/components/FormButton";
@@ -77,6 +82,7 @@ export default {
     FormElementWrapper,
     TableButton,
     FormButton,
+    Datepickerv2,
   },
   methods: {
     completeTask() {
@@ -86,7 +92,6 @@ export default {
       console.log("remove!");
     },
     cancelChanges() {
-      console.log("canceled");
       this.taskCopy.description = this.$store.getters.taskById(
         this.$route.params.id
       ).description;
@@ -117,7 +122,6 @@ export default {
   align-items: stretch;
   background: #fff;
   border-radius: 7px;
-  overflow: hidden;
 }
 
 .task-content {
@@ -155,5 +159,17 @@ export default {
 
 .edit__enable {
   color: #e67504;
+}
+
+.buttons-enter-active,
+.buttons-leave-active {
+  transition: 0.2s;
+  transform-origin: top left;
+}
+
+.buttons-enter,
+.buttons-leave-to {
+  transform: translateX(5%);
+  opacity: 0;
 }
 </style>

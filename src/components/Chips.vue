@@ -171,10 +171,18 @@ input {
   transition: all 0.4s;
 }
 
+.tag-leave-active {
+  position: absolute;
+}
+
 .tag-enter,
 .tag-leave-to {
   transform: scale(0);
   opacity: 0;
+}
+
+.tag-move {
+  transition: 0.2s;
 }
 
 .icon-close-enter-active {

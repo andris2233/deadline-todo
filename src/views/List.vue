@@ -13,27 +13,29 @@
         <div class="cell normal-cell cell-header">Статус</div>
         <div class="cell normal-cell cell-header">Управление</div>
       </div>
-      <div class="task-row" v-for="(task, index) in tasks" :key="task.id">
-        <div class="cell normal-cell">{{index + 1}}</div>
-        <div class="cell normal-cell">
-          <router-link :to="'/task/' + task.id">{{task.title}}</router-link>
+      <transition-group name="rows">
+        <div class="task-row" v-for="(task, index) in tasks" :key="task.id">
+          <div class="cell normal-cell">{{index + 1}}</div>
+          <div class="cell normal-cell">
+            <router-link :to="'/task/' + task.id">{{task.title}}</router-link>
+          </div>
+          <div class="cell big-cell">{{task.description}}</div>
+          <div class="cell normal-cell">{{new Date(task.date).toLocaleDateString()}}</div>
+          <div class="cell normal-cell">{{task.status | statusFormat}}</div>
+          <div class="cell normal-cell">
+            <TableButton
+              :theme="'green'"
+              class="button-margin"
+              @click="$store.dispatch('completeTask', task.id)"
+            >
+              <i class="material-icons">done</i>
+            </TableButton>
+            <TableButton :theme="'red'" @click="$store.dispatch('removeTask', task.id)">
+              <i class="material-icons">delete</i>
+            </TableButton>
+          </div>
         </div>
-        <div class="cell big-cell">{{task.description}}</div>
-        <div class="cell normal-cell">{{new Date(task.date).toLocaleDateString()}}</div>
-        <div class="cell normal-cell">{{task.status | statusFormat}}</div>
-        <div class="cell normal-cell">
-          <TableButton
-            :theme="'green'"
-            class="button-margin"
-            @click="$store.dispatch('completeTask', task.id)"
-          >
-            <i class="material-icons">done</i>
-          </TableButton>
-          <TableButton :theme="'red'" @click="$store.dispatch('removeTask', task.id)">
-            <i class="material-icons">delete</i>
-          </TableButton>
-        </div>
-      </div>
+      </transition-group>
     </div>
   </div>
 </template>
@@ -189,5 +191,25 @@ a:hover:after {
 
 .button-margin {
   margin: 0 7px 0 0;
+}
+
+.rows-enter-active,
+.rows-leave-active {
+  transition: 0.3s;
+}
+
+.rows-enter,
+.rows-leave-to {
+  opacity: 0;
+  transform: scale(0);
+}
+/* 
+.rows-leave-active,
+.rows-enter-active {
+  position: absolute;
+} */
+
+.rows-move {
+  transition: all 0.4s;
 }
 </style>
