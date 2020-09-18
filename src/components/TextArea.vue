@@ -2,15 +2,17 @@
   <div class="textarea-wrapper" v-bind:class="{wrapperActive: focused}">
     <div
       class="textarea__placeholder"
-      v-bind:class="{textarea__placeholderActive: focused || description.trim().length}"
+      v-bind:class="{textarea__placeholderActive: focused || value.trim().length}"
+      @click="textareaFocus"
     >{{placeholder}}</div>
     <textarea
       class="textarea"
       @focus="focused=true"
       @blur="focused=false"
-      v-model="description"
+      :value="value"
       @input="$emit('input', $event.target.value);"
       :disabled="disabled"
+      ref="textarea"
     ></textarea>
   </div>
 </template>
@@ -23,9 +25,8 @@ export default {
       required: false,
       default: "Description",
     },
-    text: {
-      type: String,
-      required: false,
+    value: {
+      default: "",
     },
     disabled: {
       type: Boolean,
@@ -35,14 +36,20 @@ export default {
   },
   data() {
     return {
-      description: "",
       focused: false,
     };
   },
   mounted() {
-    if (this.$props.text.trim()) {
-      this.description = this.$props.text;
-    }
+    // if (this.$props.text.trim()) {
+    //   this.description = this.$props.text;
+    // }
+  },
+  methods: {
+    textareaFocus() {
+      if (!this.focused) {
+        this.$refs.textarea.focus();
+      }
+    },
   },
 };
 </script>

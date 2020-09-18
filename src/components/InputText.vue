@@ -2,13 +2,13 @@
   <div class="input-wrapper" v-bind:class="{inputActiveLine: focused}">
     <div
       class="input-placeholder"
-      v-bind:class="{placeholderActive: inputText.trim().length || focused}"
+      v-bind:class="{placeholderActive: value.trim().length || focused}"
     >{{placeholder ? placeholder : 'Text'}}</div>
     <input
       type="text"
       @focus="focused=true"
       @blur="focused=false"
-      @input="$emit('input', $event.target.value); inputText = $event.target.value"
+      @input="$emit('input', $event.target.value)"
     />
   </div>
 </template>
@@ -20,9 +20,8 @@ export default {
       type: String,
       required: false,
     },
-    text: {
-      type: String,
-      required: true,
+    value: {
+      default: "",
     },
   },
   data() {

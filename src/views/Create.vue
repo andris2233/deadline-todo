@@ -1,7 +1,7 @@
 <template>
   <form>
     <div class="form-element__wrapper">
-      <FormHeader :value="'Создать задачу'" />
+      <FormHeader :value="'Создать задачу'" style="text-align:center">{{'Создать задачу'}}</FormHeader>
     </div>
 
     <div class="form-content">
@@ -86,7 +86,7 @@ export default {
         title: this.title,
         tags: this.tags,
         description: this.description,
-        date: this.date.getTime(),
+        date: this.date,
         status: "active",
       });
       this.$router.push("/list");

@@ -2,15 +2,14 @@
   <div class="datepicker-wrapper" v-bind:class="{datepickerActiveLine: focused}">
     <label
       class="datepicker-placeholder"
-      v-bind:class="{datepickerPlaceholderActive: dateInput || focused}"
+      v-bind:class="{datepickerPlaceholderActive: value || focused}"
     >{{placeholder}}</label>
     <input
       type="date"
-      v-model="dateInput"
-      @input="$emit('input', new Date($event.target.value));"
+      @input="$emit('input', $event.target.value);"
       @focus="focused=true"
       @blur="focused=false"
-      v-bind:class="{invisible: !dateInput && !focused}"
+      v-bind:class="{invisible: !value && !focused}"
       :disabled="disabled"
     />
   </div>
@@ -24,9 +23,8 @@ export default {
       required: false,
       default: "Date",
     },
-    date: {
-      type: Date,
-      required: false,
+    value: {
+      default: "",
     },
     disabled: {
       type: Boolean,
@@ -41,13 +39,13 @@ export default {
     };
   },
   mounted() {
-    const { date } = this.$props;
-    if (date) {
-      this.dateInput = `${date.getFullYear()}-${(
-        "0" +
-        (date.getMonth() + 1)
-      ).substr(-2)}-${("0" + date.getDate()).substr(-2)}`;
-    }
+    // const { date } = this.$props;
+    // if (date) {
+    //   this.dateInput = `${date.getFullYear()}-${(
+    //     "0" +
+    //     (date.getMonth() + 1)
+    //   ).substr(-2)}-${("0" + date.getDate()).substr(-2)}`;
+    // }
   },
 };
 </script>

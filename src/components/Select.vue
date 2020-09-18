@@ -1,5 +1,10 @@
 <template>
-  <div class="select" :class="{'select-active': active}">
+  <div
+    class="select"
+    :class="{'select-active': active}"
+    ref="select"
+    v-click-outside="clickOutsideEvent"
+  >
     <div class="selected-prop" @click="active=!active">
       <span>{{selectedProp.title ? selectedProp.title : 'Выберите свойство'}}</span>
       <i class="material-icons arrow" :class="{activeArrow: active}">expand_more</i>
@@ -41,6 +46,9 @@ export default {
       this.active = false;
       this.$emit("input", option);
     },
+    clickOutsideEvent(e) {
+      this.active = false;
+    },
   },
   mounted() {
     if (this.$props.selected) {
@@ -55,7 +63,6 @@ export default {
 <style scoped>
 .select {
   position: relative;
-  padding: 5px 10px;
   width: 270px;
   box-sizing: border-box;
   background: #fff;
@@ -80,6 +87,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 5px 10px;
 }
 
 .arrow {
@@ -111,7 +119,6 @@ export default {
   transform: scaleY(0);
   background: #328bca;
   color: #000;
-  /* border: 1px solid #ccc; */
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   overflow: hidden;

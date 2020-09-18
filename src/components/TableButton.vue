@@ -39,6 +39,7 @@ button {
   border-radius: 4px;
   transition: 0.3s;
   outline: none;
+  cursor: pointer;
 }
 
 .red {

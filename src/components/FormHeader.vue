@@ -1,5 +1,7 @@
 <template>
-  <div>{{value}}</div>
+  <div class="slot-wrapper">
+    <slot></slot>
+  </div>
 </template>
 
 <script>
@@ -9,10 +11,9 @@ export default {
 </script>
 
 <style scoped>
-div {
+.slot-wrapper {
   font-size: 24px;
   font-weight: 700;
-  text-align: center;
   padding: 30px 0;
   background: #fcfcfc;
   border-bottom: 1px solid #dadada;

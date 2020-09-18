@@ -1,18 +1,19 @@
 <template>
   <transition-group name="tag" tag="div" class="tags-row" v-bind:class="{focusedInput:focused}">
-    <label
-      for="tags"
+    <div
       class="tags__placeholder"
       v-bind:class="{placeholderActive: tags.length || focused || tag.trim().length}"
       key="placeholder"
-    >{{placeholder}}</label>
+    >{{placeholder}}</div>
     <div class="tag" v-for="tag in tags" :key="tag.id">
       <div class="tag-name">{{tag.name}}</div>
-      <i class="material-icons close" @click="removeTag(tag.id)" v-if="!disabled">close</i>
+      <transition name="icon-close">
+        <i class="material-icons close" @click="removeTag(tag.id)" v-if="!disabled">close</i>
+      </transition>
     </div>
     <input
       type="text"
-      name="tags"
+      ref="tagsInput"
       class="tags-input"
       @keyup.enter="createTag"
       @focus="focused=true"
@@ -72,8 +73,10 @@ export default {
     removeTag(id) {
       this.$emit("remove-tag", id);
     },
-    stopPropogate(e) {
-      e.stopPropogation();
+    inputFocus() {
+      if (this.focused) {
+        this.$refs.tagsInput.focus();
+      }
     },
   },
 };
@@ -172,5 +175,23 @@ input {
 .tag-leave-to {
   transform: scale(0);
   opacity: 0;
+}
+
+.icon-close-enter-active {
+  animation: bounce-in 0.4s;
+}
+.icon-close-leave-active {
+  animation: bounce-in 0.4s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 </style>
