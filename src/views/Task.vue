@@ -3,7 +3,12 @@
     <FormElementWrapper>
       <FormHeader>
         <div class="header__row">
-          {{taskCopy.title}}
+          <InputText
+            v-bind:text="taskCopy.title"
+            v-model="taskCopy.title"
+            v-bind:placeholder="'Название'"
+            :disabled="disabled"
+          />
           <i
             class="material-icons edit"
             :class="[disabled ? 'edit__disable' : 'edit__enable']"
@@ -14,15 +19,30 @@
     </FormElementWrapper>
     <div class="task-content">
       <FormElementWrapper>
-        <TextArea :disabled="disabled" v-model="taskCopy.description" />
+        <TextArea
+          :disabled="disabled"
+          v-model="taskCopy.description"
+          v-bind:placeholder="'Описание'"
+        />
       </FormElementWrapper>
 
       <FormElementWrapper>
-        <Chips :disabled="disabled" :tags="taskCopy.tags" />
+        <Chips
+          :disabled="disabled"
+          :tags="taskCopy.tags"
+          v-bind:placeholder="'Тэги'"
+          @create-tag="createTag"
+          @remove-tag="removeTag"
+        />
       </FormElementWrapper>
 
       <FormElementWrapper>
-        <Datepicker :disabled="disabled" :date="taskCopy.date" v-model="taskCopy.date" />
+        <Datepicker
+          :disabled="disabled"
+          :date="taskCopy.date"
+          v-model="taskCopy.date"
+          v-bind:placeholder="'Дедлайн'"
+        />
       </FormElementWrapper>
 
       <transition name="buttons" mode="out-in">
@@ -30,18 +50,29 @@
           <TableButton @click="completeTask" :theme="'green'" class="button-margin">
             <i class="material-icons">done</i>
           </TableButton>
-          <TableButton @click="removeTask" :theme="'red'">
+          <TableButton @click="deletePopup=true" :theme="'red'">
             <i class="material-icons">delete</i>
           </TableButton>
         </div>
 
         <div v-else :key="'edit'">
-          <FormButton @click="saveTask" class="button-margin">{{'Сохранить'}}</FormButton>
+          <FormButton @click="saveTask" class="button-margin" :disabled="!validSave">{{'Сохранить'}}</FormButton>
           <FormButton @click="cancelChanges">{{'Отмена'}}</FormButton>
         </div>
       </transition>
 
-      <!-- <Datepickerv2 v-model="taskCopy.date" /> -->
+      <Popup @cancel="deletePopup=false" :show="deletePopup">
+        <template v-slot:header style="padding: 5px">
+          <div>{{'Вы действительно хотите удалить задачу?'}}</div>
+        </template>
+        <template v-slot:body>{{'После подтверждения отменить действие будет невозможно!'}}</template>
+        <template v-slot:control>
+          <div class="popup-btns">
+            <FormButton @click="removeTask" class="button-margin">{{'Удалить'}}</FormButton>
+            <FormButton @click="deletePopup=false">{{'Отмена'}}</FormButton>
+          </div>
+        </template>
+      </Popup>
     </div>
   </div>
 </template>
@@ -50,16 +81,29 @@
 import TextArea from "@/components/TextArea";
 import Chips from "@/components/Chips";
 import Datepicker from "@/components/Datepicker";
-import Datepickerv2 from "@/components/Datepickerv2";
 import FormHeader from "@/components/FormHeader";
 import FormElementWrapper from "@/components/FormElementWrapper";
 import FormButton from "@/components/FormButton";
 import TableButton from "@/components/TableButton";
+import InputText from "@/components/InputText";
+import Popup from "@/components/Popup";
 
 export default {
   computed: {
     task() {
       return this.$store.getters.taskById(this.$route.params.id);
+    },
+    validSave() {
+      if (
+        this.taskCopy.title.trim() &&
+        this.taskCopy.tags.length &&
+        this.taskCopy.description.trim() &&
+        this.taskCopy.date
+      ) {
+        return true;
+      } else {
+        return false;
+      }
     },
   },
   created() {
@@ -72,6 +116,7 @@ export default {
     return {
       disabled: true,
       taskCopy: null,
+      deletePopup: false,
     };
   },
   components: {
@@ -82,14 +127,16 @@ export default {
     FormElementWrapper,
     TableButton,
     FormButton,
-    Datepickerv2,
+    InputText,
+    Popup,
   },
   methods: {
     completeTask() {
-      console.log("complete!");
+      this.$store.dispatch("completeTask", this.taskCopy.id);
+      this.$router.push("/list");
     },
     removeTask() {
-      console.log("remove!");
+      this.$store.dispatch("removeTask", this.taskCopy.id);
     },
     cancelChanges() {
       this.taskCopy.description = this.$store.getters.taskById(
@@ -107,8 +154,14 @@ export default {
       this.disabled = true;
     },
     saveTask() {
-      console.log("save");
+      this.$store.dispatch("saveTask", this.taskCopy);
       this.disabled = true;
+    },
+    createTag(tag) {
+      this.taskCopy.tags.push(tag);
+    },
+    removeTag(id) {
+      this.taskCopy.tags = this.taskCopy.tags.filter((tag) => tag.id !== id);
     },
   },
 };
@@ -159,6 +212,12 @@ export default {
 
 .edit__enable {
   color: #e67504;
+}
+
+.popup-btns {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
 }
 
 .buttons-enter-active,

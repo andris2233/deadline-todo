@@ -9,6 +9,7 @@
       @input="$emit('input', $event.target.value);"
       @focus="focused=true"
       @blur="focused=false"
+      :value="value"
       v-bind:class="{invisible: !value && !focused}"
       :disabled="disabled"
     />

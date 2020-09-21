@@ -5,35 +5,53 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    tasks: JSON.parse(localStorage.getItem('tasks') || '[]')
+    tasks: JSON.parse(localStorage.getItem('tasks') || '[]').map(item => {
+      if (new Date(item.date).getTime() <= Date.now() && item.status !== "completed") {
+        item.status = "expired";
+      }
+      return item;
+    })
   },
   mutations: {
-    CREATE_TASK(state, task) {
+    createTask(state, task) {
       state.tasks.push(task);
       localStorage.setItem('tasks', JSON.stringify(state.tasks));
     },
-    REMOVE_TASK(state, id) {
+    removeTask(state, id) {
       state.tasks = state.tasks.filter(task => task.id !== id);
       localStorage.setItem('tasks', JSON.stringify(state.tasks));
     },
-    COMPLETE_TASK(state, id) {
+    completeTask(state, id) {
       const index = state.tasks.findIndex(t => t.id === +id);
       state.tasks[index].status = 'completed';
+      localStorage.setItem('tasks', JSON.stringify(state.tasks));
+    },
+    saveTask(state, task) {
+      if (task.status !== 'completed' && Date.now() > new Date(task.date).getTime()) {
+        task.status = "expired";
+      } else {
+        task.status = "active";
+      }
+      const index = state.tasks.findIndex(t => t.id === task.id);
+      state.tasks[index] = task;
       localStorage.setItem('tasks', JSON.stringify(state.tasks));
     }
   },
   actions: {
     createTask({ commit }, task) {
-      if (task.date < Date.now()) {
+      if (new Date(task.date).getTime() < Date.now()) {
         task.status = 'expired';
       }
-      commit('CREATE_TASK', task);
+      commit('createTask', task);
     },
     removeTask({ commit }, id) {
-      commit('REMOVE_TASK', id)
+      commit('removeTask', id)
     },
     completeTask({ commit }, id) {
-      commit('COMPLETE_TASK', id)
+      commit('completeTask', id)
+    },
+    saveTask({ commit }, task) {
+      commit('saveTask', task);
     }
   },
   getters: {

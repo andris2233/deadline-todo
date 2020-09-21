@@ -4,8 +4,9 @@
       <div class="haeder__text">Список задач</div>
       <Select :options="options" v-model="filter" :selected="options[0]" />
     </div>
-    <div class="task-list__content">
-      <div class="task-row">
+    <!-- <div class="task-list__content"> -->
+    <transition-group name="rows" tag="div" class="task-list__content">
+      <div class="task-row" :key="'header'">
         <div class="cell normal-cell cell-header">№</div>
         <div class="cell normal-cell cell-header">Название</div>
         <div class="cell big-cell cell-header">Описание</div>
@@ -13,30 +14,29 @@
         <div class="cell normal-cell cell-header">Статус</div>
         <div class="cell normal-cell cell-header">Управление</div>
       </div>
-      <transition-group name="rows">
-        <div class="task-row" v-for="(task, index) in tasks" :key="task.id">
-          <div class="cell normal-cell">{{index + 1}}</div>
-          <div class="cell normal-cell">
-            <router-link :to="'/task/' + task.id">{{task.title}}</router-link>
-          </div>
-          <div class="cell big-cell">{{task.description}}</div>
-          <div class="cell normal-cell">{{new Date(task.date).toLocaleDateString()}}</div>
-          <div class="cell normal-cell">{{task.status | statusFormat}}</div>
-          <div class="cell normal-cell">
-            <TableButton
-              :theme="'green'"
-              class="button-margin"
-              @click="$store.dispatch('completeTask', task.id)"
-            >
-              <i class="material-icons">done</i>
-            </TableButton>
-            <TableButton :theme="'red'" @click="$store.dispatch('removeTask', task.id)">
-              <i class="material-icons">delete</i>
-            </TableButton>
-          </div>
+      <div class="task-row" v-for="(task, index) in tasks" :key="task.id">
+        <div class="cell normal-cell">{{index + 1}}</div>
+        <div class="cell normal-cell">
+          <router-link :to="'/task/' + task.id">{{task.title}}</router-link>
         </div>
-      </transition-group>
-    </div>
+        <div class="cell big-cell">{{task.description}}</div>
+        <div class="cell normal-cell">{{task.date}}</div>
+        <div class="cell normal-cell">{{task.status | statusFormat}}</div>
+        <div class="cell normal-cell">
+          <TableButton
+            :theme="'green'"
+            class="button-margin"
+            @click="$store.dispatch('completeTask', task.id)"
+          >
+            <i class="material-icons">done</i>
+          </TableButton>
+          <TableButton :theme="'red'" @click="$store.dispatch('removeTask', task.id)">
+            <i class="material-icons">delete</i>
+          </TableButton>
+        </div>
+      </div>
+    </transition-group>
+    <!-- </div> -->
   </div>
 </template>
 
@@ -101,7 +101,7 @@ export default {
 .task-list {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  /* align-items: stretch; */
   width: 70vw;
   border-radius: 10px;
   box-sizing: border-box;
@@ -127,9 +127,10 @@ export default {
 }
 
 .task-list__content {
-  display: flex;
+  position: relative;
+  /* display: flex;
   flex-direction: column;
-  align-items: stretch;
+  align-items: stretch; */
   padding: 0 20px 20px 20px;
   flex: 1;
 }
@@ -139,6 +140,9 @@ export default {
   align-items: center;
   padding: 10px 0;
   border-bottom: 1px solid #dadada;
+  transition: all 0.4s;
+  width: 100%;
+  /* position: absolute; */
 }
 
 .cell {
@@ -193,23 +197,46 @@ a:hover:after {
   margin: 0 7px 0 0;
 }
 
-.rows-enter-active,
+/* .rows-enter-active,
 .rows-leave-active {
-  transition: 0.3s;
+  transition: 0.7s;
 }
 
 .rows-enter,
 .rows-leave-to {
   opacity: 0;
-  transform: scale(0);
+  transform: scaleY(0);
 }
-/* 
+
 .rows-leave-active,
 .rows-enter-active {
   position: absolute;
-} */
+}
 
 .rows-move {
-  transition: all 0.4s;
+  transition: transform 0.7s;
+} */
+
+.rows-enter-active,
+.rows-leave-active {
+  /* transition: all 2s; */
+  transform-origin: top center;
+  /* position: absolute; */
+}
+
+.rows-enter,
+.rows-leave-to {
+  transform: translateY(50px);
+  opacity: 0;
+}
+
+.rows-leave-active {
+  width: 100%;
+  position: absolute;
+}
+
+.rows-move {
+  transition: transform 0.4s;
+  /* position: absolute; */
 }
 </style>

@@ -8,7 +8,9 @@
       type="text"
       @focus="focused=true"
       @blur="focused=false"
+      :value="value"
       @input="$emit('input', $event.target.value)"
+      :disabled="disabled"
     />
   </div>
 </template>
@@ -23,15 +25,19 @@ export default {
     value: {
       default: "",
     },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   data() {
     return {
       focused: false,
-      inputText: "",
     };
   },
   mounted() {
-    this.inputText = this.$props.text;
+    // this.inputText = this.$props.text;
   },
 };
 </script>
