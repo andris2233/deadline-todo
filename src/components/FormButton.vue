@@ -33,24 +33,20 @@ button {
   outline: none;
   box-shadow: 0 0px 5px $blue-color;
 
-  &:hover {
+  &:hover:enabled {
     transform: scale(1.1);
     background: white;
     box-shadow: 0 0px 10px $blue-color;
     color: $blue-color;
   }
 
-  &:active {
+  &:active:enabled {
     transform: scale(1);
   }
 
-  &:disabled,
-  &:disabled:hover {
-    background: $blue-color;
-    box-shadow: 0 0px 5px $blue-color;
-    color: white;
+  &:disabled {
     opacity: 0.5;
-    transform: scale(1);
+    cursor: default;
   }
 }
 </style>

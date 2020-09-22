@@ -46,8 +46,11 @@ button {
   transition: 0.3s;
   outline: none;
   cursor: pointer;
-  &:active {
+  &:active:enabled {
     transform: scale(0.9);
+  }
+  &:disabled {
+    opacity: 0.5;
   }
 }
 
@@ -55,7 +58,7 @@ button {
   border: 2px solid $dark-red;
   background: $light-red;
   color: #fff;
-  &:hover {
+  &:hover:enabled {
     background: #fff;
     color: $dark-red;
   }
@@ -65,7 +68,7 @@ button {
   border: 2px solid $dark-green;
   background: $light-green;
   color: #fff;
-  &:hover {
+  &:hover:enabled {
     background: #fff;
     color: $dark-green;
   }
