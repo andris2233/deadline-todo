@@ -1,45 +1,40 @@
 <template>
-  <div class="modal-background" :style="{'z-index': show ? 10 : -1}">
-    <transition name="show">
-      <div class="modal" v-if="show">
-        <FormHeader class="modal__header">
-          <slot name="header">header</slot>
-          <i class="material-icons icon" @click="$emit('cancel')">close</i>
-        </FormHeader>
-        <div class="modal__content">
-          <div class="modal__body">
-            <slot name="body">body</slot>
-          </div>
-          <div class="modal__control">
-            <slot name="control">control</slot>
+  <transition name="bg" appear>
+    <div class="modal-background">
+      <transition name="show" appear>
+        <div class="modal" v-click-outside="cancel">
+          <FormHeader class="modal__header">
+            <slot name="header">header</slot>
+            <i class="material-icons icon" @click="cancel">close</i>
+          </FormHeader>
+          <div class="modal__content">
+            <div class="modal__body">
+              <slot name="body">body</slot>
+            </div>
+            <div class="modal__control">
+              <slot name="control">control</slot>
+            </div>
           </div>
         </div>
-      </div>
-    </transition>
-  </div>
+      </transition>
+    </div>
+  </transition>
 </template>
 
 <script>
 import FormHeader from "@/components/FormHeader";
 
 export default {
-  props: {
-    show: {
-      type: Boolean,
-      required: true,
-    },
-  },
   components: { FormHeader },
   methods: {
     cancel() {
-      console.log("clcik outside");
       this.$emit("cancel");
     },
   },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .modal-background {
   position: absolute;
   top: 0;
@@ -58,7 +53,7 @@ export default {
   z-index: 11;
   min-height: 300px;
   max-width: 550px;
-  border-radius: 15px;
+  border-radius: 7px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -97,25 +92,26 @@ export default {
 .show-leave-active {
   animation: modal 0.4s reverse;
 }
+
 @keyframes modal {
   0% {
     transform: scale(0);
   }
   50% {
-    transform: scale(1.4);
+    transform: scale(1.2);
   }
   100% {
     transform: scale(1);
   }
 }
 
-.popup-enter-active,
-.popup-leave-active {
+.bg-enter-active,
+.bg-leave-active {
   transition: 0.3s;
 }
 
-.popup-enter,
-.popup-leave-to {
+.bg-enter,
+.bg-leave-to {
   opacity: 0;
 }
 </style>
