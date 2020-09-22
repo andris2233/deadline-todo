@@ -47,10 +47,15 @@
 
       <transition name="buttons" mode="out-in">
         <div v-if="disabled" :key="'not-edit'">
-          <TableButton @click="completeTask" :theme="'green'" class="button-margin">
+          <TableButton
+            @click="popupType='COMPLETE'; popup='Popup'"
+            :theme="'green'"
+            class="button-margin"
+            :disabled="completeButtonDisabled"
+          >
             <i class="material-icons">done</i>
           </TableButton>
-          <TableButton @click="deletePopup=true" :theme="'red'">
+          <TableButton @click="popupType='DELETE'; popup='Popup'" :theme="'red'">
             <i class="material-icons">delete</i>
           </TableButton>
         </div>
@@ -61,18 +66,18 @@
         </div>
       </transition>
 
-      <Popup @cancel="deletePopup=false" :show="deletePopup">
-        <template v-slot:header style="padding: 5px">
-          <div>{{'Вы действительно хотите удалить задачу?'}}</div>
+      <component :is="popup" @cancel="popup=''">
+        <template v-slot:header>
+          <div class="popup-header">{{popupQuestion}}</div>
         </template>
         <template v-slot:body>{{'После подтверждения отменить действие будет невозможно!'}}</template>
         <template v-slot:control>
           <div class="popup-btns">
-            <FormButton @click="removeTask">{{'Удалить'}}</FormButton>
-            <FormButton @click="deletePopup=false">{{'Отмена'}}</FormButton>
+            <FormButton @click="popupCommit">{{popupCommitButton}}</FormButton>
+            <FormButton @click="popup=''">{{'Отмена'}}</FormButton>
           </div>
         </template>
-      </Popup>
+      </component>
     </div>
   </div>
 </template>
@@ -105,6 +110,23 @@ export default {
         return false;
       }
     },
+    popupQuestion() {
+      if (this.popupType === "DELETE") {
+        return "Вы действительно хотите удалить задачу?";
+      } else {
+        return "Завершили выполнение задачи?";
+      }
+    },
+    popupCommitButton() {
+      if (this.popupType === "DELETE") {
+        return "Удалить";
+      } else {
+        return "Завершить";
+      }
+    },
+    completeButtonDisabled() {
+      return this.taskCopy.status === "completed";
+    },
   },
   created() {
     this.taskCopy = JSON.parse(
@@ -115,7 +137,8 @@ export default {
     return {
       disabled: true,
       taskCopy: null,
-      deletePopup: false,
+      popup: "",
+      popupType: "DELETE",
     };
   },
   components: {
@@ -130,12 +153,14 @@ export default {
     Popup,
   },
   methods: {
-    completeTask() {
-      this.$store.dispatch("completeTask", this.taskCopy.id);
-      this.$router.push("/list");
-    },
-    removeTask() {
-      this.$store.dispatch("removeTask", this.taskCopy.id);
+    popupCommit() {
+      if (this.popupType === "DELETE") {
+        this.$store.dispatch("removeTask", this.taskCopy.id);
+        this.$router.push("/list");
+      } else {
+        this.$store.dispatch("completeTask", this.taskCopy.id);
+        this.$router.push("/list");
+      }
     },
     cancelChanges() {
       this.taskCopy.description = this.$store.getters.taskById(
@@ -208,6 +233,13 @@ export default {
 
 .button-margin {
   margin: 0 5px 0 0;
+}
+
+.popup-header {
+  font-weight: 700;
+  font-size: 18px;
+  color: #328bca;
+  padding: 5px 0;
 }
 
 .popup-btns {
