@@ -19,36 +19,38 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+$blue-color: #328bca;
+
 button {
   border: 0;
-  background: #328bca;
+  background: $blue-color;
   padding: 8px 0;
   border-radius: 20px;
   transition: all ease 0.3s;
   color: white;
   width: 110px;
   outline: none;
-  box-shadow: 0 0px 5px #328bca;
-}
+  box-shadow: 0 0px 5px $blue-color;
 
-button:hover {
-  transform: scale(1.1);
-  background: white;
-  box-shadow: 0 0px 10px #328bca;
-  color: #328bca;
-}
+  &:hover {
+    transform: scale(1.1);
+    background: white;
+    box-shadow: 0 0px 10px $blue-color;
+    color: $blue-color;
+  }
 
-button:active {
-  transform: scale(1);
-}
+  &:active {
+    transform: scale(1);
+  }
 
-button:disabled,
-button:disabled:hover {
-  background: #328bca;
-  box-shadow: 0 0px 5px #328bca;
-  color: white;
-  opacity: 0.5;
-  transform: scale(1);
+  &:disabled,
+  &:disabled:hover {
+    background: $blue-color;
+    box-shadow: 0 0px 5px $blue-color;
+    color: white;
+    opacity: 0.5;
+    transform: scale(1);
+  }
 }
 </style>

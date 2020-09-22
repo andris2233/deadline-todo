@@ -1,16 +1,17 @@
 <template>
-  <div class="datepicker-wrapper" v-bind:class="{datepickerActiveLine: focused}">
+  <div class="datepicker-wrapper" v-bind:class="{'datepicker-wrapper__active': focused}">
     <label
       class="datepicker-placeholder"
-      v-bind:class="{datepickerPlaceholderActive: value || focused}"
+      v-bind:class="{'datepicker-placeholder__active': value || focused}"
     >{{placeholder}}</label>
     <input
+      class="datepicker"
       type="date"
       @input="$emit('input', $event.target.value);"
       @focus="focused=true"
       @blur="focused=false"
       :value="value"
-      v-bind:class="{invisible: !value && !focused}"
+      v-bind:class="{'datepicker__invisible': !value && !focused}"
       :disabled="disabled"
     />
   </div>
@@ -39,25 +40,41 @@ export default {
       focused: false,
     };
   },
-  mounted() {
-    // const { date } = this.$props;
-    // if (date) {
-    //   this.dateInput = `${date.getFullYear()}-${(
-    //     "0" +
-    //     (date.getMonth() + 1)
-    //   ).substr(-2)}-${("0" + date.getDate()).substr(-2)}`;
-    // }
-  },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+$blue-color: #328bca;
+
 .datepicker-wrapper {
   padding-top: 13px;
   position: relative;
   min-height: 40px;
   width: 100%;
   overflow: hidden;
+
+  &:before {
+    content: "";
+    position: absolute;
+    bottom: 1px;
+    height: 1px;
+    background: #c2c2c2;
+    width: 100%;
+  }
+  &:after {
+    transition: all ease 0.3s;
+    content: "";
+    position: absolute;
+    bottom: 0%;
+    transform: translateX(-100%);
+    height: 2px;
+    background: $blue-color;
+    width: 100%;
+  }
+
+  &.datepicker-wrapper__active:after {
+    transform: translateX(0%);
+  }
 }
 
 .datepicker-placeholder {
@@ -67,35 +84,15 @@ export default {
   position: absolute;
   left: 0%;
   top: 48%;
+
+  &.datepicker-placeholder__active {
+    top: 0%;
+    font-size: 12px;
+    color: $blue-color;
+  }
 }
 
-.datepickerPlaceholderActive {
-  top: 0%;
-  font-size: 12px;
-  color: #328bca;
-}
-
-.datepicker-wrapper:before {
-  content: "";
-  position: absolute;
-  bottom: 1px;
-  height: 1px;
-  background: #c2c2c2;
-  width: 100%;
-}
-
-.datepicker-wrapper:after {
-  transition: all ease 0.3s;
-  content: "";
-  position: absolute;
-  bottom: 0%;
-  transform: translateX(-100%);
-  height: 2px;
-  background: #328bca;
-  width: 100%;
-}
-
-input {
+.datepicker {
   position: absolute;
   height: 70%;
   width: 100%;
@@ -104,13 +101,14 @@ input {
   outline: none;
   border: 0;
   transition: opacity ease 0.5s;
-}
+  cursor: text;
 
-.invisible {
-  opacity: 0;
-}
+  &.datepicker__invisible {
+    opacity: 0;
+  }
 
-.datepickerActiveLine:after {
-  transform: translateX(0%);
+  &:disabled {
+    cursor: default;
+  }
 }
 </style>

@@ -1,14 +1,19 @@
 <template>
-  <transition-group name="tag" tag="div" class="tags-row" v-bind:class="{focusedInput:focused}">
+  <transition-group
+    name="tag"
+    tag="div"
+    class="tags-row"
+    v-bind:class="{'tags-row__active':focused}"
+  >
     <div
-      class="tags__placeholder"
-      v-bind:class="{placeholderActive: tags.length || focused || tag.trim().length}"
+      class="tags-placeholder"
+      v-bind:class="{'tags-placeholder__active': tags.length || focused || tag.trim().length}"
       key="placeholder"
     >{{placeholder}}</div>
     <div class="tag" v-for="tag in tags" :key="tag.id">
       <div class="tag-name">{{tag.name}}</div>
       <transition name="icon-close">
-        <i class="material-icons close" @click="removeTag(tag.id)" v-if="!disabled">close</i>
+        <i class="material-icons tag-icon" @click="removeTag(tag.id)" v-if="!disabled">close</i>
       </transition>
     </div>
     <input
@@ -82,7 +87,10 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+$blue-color: #328bca;
+$gray-color: #c2c2c2;
+
 .tags-row {
   display: flex;
   align-items: stretch;
@@ -92,47 +100,46 @@ export default {
   overflow: hidden;
   padding-top: 13px;
   min-height: 40px;
+  &:before {
+    content: "";
+    position: absolute;
+    bottom: 1px;
+    background: $gray-color;
+    width: 100%;
+    height: 1px;
+    border-radius: 5px;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: 0%;
+    background: $blue-color;
+    transition: 0.3s;
+    width: 100%;
+    transform: translateX(-100%);
+    height: 2px;
+    border-radius: 5px;
+  }
+
+  &.tags-row__active:after {
+    transform: translateX(0%);
+  }
 }
 
-.tags-row:before {
-  content: "";
-  position: absolute;
-  bottom: 1px;
-  background: #c2c2c2;
-  width: 100%;
-  height: 1px;
-  border-radius: 5px;
-}
-
-.tags-row:after {
-  content: "";
-  position: absolute;
-  bottom: 0%;
-  background: #328bca;
-  transition: 0.3s;
-  width: 100%;
-  transform: translateX(-100%);
-  height: 2px;
-  border-radius: 5px;
-}
-
-.focusedInput:after {
-  transform: translateX(0%);
-}
-
-.tags__placeholder {
+.tags-placeholder {
   transition: 0.5s;
-  color: #c2c2c2;
+  color: $gray-color;
   font-size: 15px;
   position: absolute;
   left: 0%;
   top: 48%;
-}
 
-.placeholderActive {
-  top: 0%;
-  font-size: 12px;
-  color: #328bca;
+  &.tags-placeholder__active {
+    top: 0%;
+    font-size: 12px;
+    color: $blue-color;
+  }
 }
 
 .tag {
@@ -140,10 +147,11 @@ export default {
   padding: 5px 10px;
   display: flex;
   align-items: center;
-  background: #328bca;
-  color: white;
+  background: $blue-color;
+  color: #fff;
   margin: 0 5px 5px 0;
   min-width: 40px;
+  transition: 0.2s;
 }
 
 input {
@@ -156,7 +164,7 @@ input {
   background: none;
 }
 
-.close {
+.tag-icon {
   cursor: pointer;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -188,9 +196,11 @@ input {
 .icon-close-enter-active {
   animation: bounce-in 0.4s;
 }
+
 .icon-close-leave-active {
   animation: bounce-in 0.4s reverse;
 }
+
 @keyframes bounce-in {
   0% {
     transform: scale(0);

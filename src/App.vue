@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="nav">
-      <div class="header">Задачи</div>
+      <div class="nav__header">Задачи</div>
       <div class="nav-menu">
         <router-link to="/" class="nav-link">Создать</router-link>
         <router-link to="/list" class="nav-link">Список</router-link>
@@ -13,7 +13,7 @@
   </div>
 </template>
 
-<style>
+<style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -37,9 +37,13 @@
   margin-bottom: 15px;
   width: 100%;
   box-sizing: border-box;
+
+  a.router-link-exact-active {
+    background: #1d6ca5;
+  }
 }
 
-.header {
+.nav__header {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -62,14 +66,10 @@
   text-decoration: none;
   width: 90px;
   height: 70px;
-}
 
-.nav-link:hover {
-  background: #49a0de;
-}
-
-#nav a.router-link-exact-active {
-  background: #1d6ca5;
+  &:hover {
+    background: #49a0de;
+  }
 }
 
 .router-enter-active,

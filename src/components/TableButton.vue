@@ -29,7 +29,13 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+$dark-red: #ac0b0b;
+$light-red: #cd2f2f;
+
+$dark-green: #0aab4e;
+$light-green: #2fcd74;
+
 button {
   display: inline-flex;
   align-items: center;
@@ -40,31 +46,28 @@ button {
   transition: 0.3s;
   outline: none;
   cursor: pointer;
+  &:active {
+    transform: scale(0.9);
+  }
 }
 
 .red {
-  border: 2px solid #ac0b0b;
-  background: #cd2f2f;
+  border: 2px solid $dark-red;
+  background: $light-red;
   color: #fff;
-}
-
-.red:hover {
-  background: #fff;
-  color: #ac0b0b;
+  &:hover {
+    background: #fff;
+    color: $dark-red;
+  }
 }
 
 .green {
-  border: 2px solid #0aab4e;
-  background: #2fcd74;
+  border: 2px solid $dark-green;
+  background: $light-green;
   color: #fff;
-}
-
-.green:hover {
-  background: #fff;
-  color: #0aab4e;
-}
-
-button:active {
-  transform: scale(0.9);
+  &:hover {
+    background: #fff;
+    color: $dark-green;
+  }
 }
 </style>

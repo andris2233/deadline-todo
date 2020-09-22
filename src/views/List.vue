@@ -4,7 +4,6 @@
       <div class="haeder__text">Список задач</div>
       <Select :options="options" v-model="filter" :selected="options[0]" />
     </div>
-    <!-- <div class="task-list__content"> -->
     <transition-group name="rows" tag="div" class="task-list__content">
       <div class="task-row" :key="'header'">
         <div class="cell normal-cell cell-header">№</div>
@@ -36,7 +35,6 @@
         </div>
       </div>
     </transition-group>
-    <!-- </div> -->
   </div>
 </template>
 
@@ -97,11 +95,10 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .task-list {
   display: flex;
   flex-direction: column;
-  /* align-items: stretch; */
   width: 70vw;
   border-radius: 10px;
   box-sizing: border-box;
@@ -128,9 +125,6 @@ export default {
 
 .task-list__content {
   position: relative;
-  /* display: flex;
-  flex-direction: column;
-  align-items: stretch; */
   padding: 0 20px 20px 20px;
   flex: 1;
 }
@@ -142,7 +136,6 @@ export default {
   border-bottom: 1px solid #dadada;
   transition: all 0.4s;
   width: 100%;
-  /* position: absolute; */
 }
 
 .cell {
@@ -171,57 +164,35 @@ a {
   overflow: hidden;
   transition: 0.2s;
   position: relative;
-}
 
-a:visited {
-  color: green;
-}
+  &:visited {
+    color: green;
+  }
 
-a:after {
-  content: "";
-  height: 2px;
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  background: green;
-  transform: scaleX(0);
-  transition: 0.2s;
-}
+  &:after {
+    content: "";
+    height: 2px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: green;
+    transform: scaleX(0);
+    transition: 0.2s;
+  }
 
-a:hover:after {
-  transform: scaleX(1);
+  &:hover:after {
+    transform: scaleX(1);
+  }
 }
 
 .button-margin {
   margin: 0 7px 0 0;
 }
 
-/* .rows-enter-active,
-.rows-leave-active {
-  transition: 0.7s;
-}
-
-.rows-enter,
-.rows-leave-to {
-  opacity: 0;
-  transform: scaleY(0);
-}
-
-.rows-leave-active,
-.rows-enter-active {
-  position: absolute;
-}
-
-.rows-move {
-  transition: transform 0.7s;
-} */
-
 .rows-enter-active,
 .rows-leave-active {
-  /* transition: all 2s; */
   transform-origin: top center;
-  /* position: absolute; */
 }
 
 .rows-enter,
@@ -237,6 +208,5 @@ a:hover:after {
 
 .rows-move {
   transition: transform 0.4s;
-  /* position: absolute; */
 }
 </style>

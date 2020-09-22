@@ -4,12 +4,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: ["value"],
-};
-</script>
-
 <style scoped>
 .slot-wrapper {
   border-top-left-radius: 7px;

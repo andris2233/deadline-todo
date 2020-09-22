@@ -2,7 +2,7 @@
   <div class="task">
     <FormElementWrapper>
       <FormHeader>
-        <div class="header__row">
+        <div class="task__header">
           <InputText
             v-bind:text="taskCopy.title"
             v-model="taskCopy.title"
@@ -17,7 +17,7 @@
         </div>
       </FormHeader>
     </FormElementWrapper>
-    <div class="task-content">
+    <div class="task__content">
       <FormElementWrapper>
         <TextArea
           :disabled="disabled"
@@ -68,7 +68,7 @@
         <template v-slot:body>{{'После подтверждения отменить действие будет невозможно!'}}</template>
         <template v-slot:control>
           <div class="popup-btns">
-            <FormButton @click="removeTask" class="button-margin">{{'Удалить'}}</FormButton>
+            <FormButton @click="removeTask">{{'Удалить'}}</FormButton>
             <FormButton @click="deletePopup=false">{{'Отмена'}}</FormButton>
           </div>
         </template>
@@ -110,7 +110,6 @@ export default {
     this.taskCopy = JSON.parse(
       JSON.stringify(this.$store.getters.taskById(this.$route.params.id))
     );
-    // this.taskCopy.date = new Date(this.taskCopy.date);
   },
   data() {
     return {
@@ -167,7 +166,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .task {
   width: 600px;
   display: flex;
@@ -175,43 +174,40 @@ export default {
   align-items: stretch;
   background: #fff;
   border-radius: 7px;
-}
 
-.task-content {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  flex: 1;
-  padding: 0 45px 45px 45px;
-}
+  .task__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 45px;
+  }
 
-.button-margin {
-  margin: 0 5px 0 0;
-}
-
-.header__row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 45px;
+  .task__content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    flex: 1;
+    padding: 0 45px 45px 45px;
+  }
 }
 
 .edit {
   transition: 0.3s;
   outline: none;
   cursor: pointer;
+  &.edit__disable {
+    opacity: 0.6;
+    &:hover {
+      opacity: 1;
+    }
+  }
+  &.edit__enable {
+    color: #e67504;
+  }
 }
 
-.edit__disable {
-  opacity: 0.6;
-}
-
-.edit__disable:hover {
-  opacity: 1;
-}
-
-.edit__enable {
-  color: #e67504;
+.button-margin {
+  margin: 0 5px 0 0;
 }
 
 .popup-btns {

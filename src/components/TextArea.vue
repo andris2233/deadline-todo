@@ -39,11 +39,6 @@ export default {
       focused: false,
     };
   },
-  mounted() {
-    // if (this.$props.text.trim()) {
-    //   this.description = this.$props.text;
-    // }
-  },
   methods: {
     textareaFocus() {
       if (!this.focused) {
@@ -54,7 +49,10 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+$blue-color: #328bca;
+$gray-color: #c2c2c2;
+
 .textarea-wrapper {
   position: relative;
   display: flex;
@@ -65,40 +63,40 @@ export default {
   height: 130px;
   width: 100%;
   border-radius: 10px;
-  border: 1px solid #c2c2c2;
+  border: 1px solid $gray-color;
   transition: all ease 0.3s;
   overflow: hidden;
   background: #fff;
+
+  &.wrapperActive {
+    background: #fff;
+    border: 1px solid $blue-color;
+    box-shadow: 0 0 0 1px $blue-color;
+  }
+
+  .textarea {
+    resize: none;
+    flex: 1;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    outline: none;
+  }
 }
 
 .textarea__placeholder {
   transition: 0.5s;
-  color: #c2c2c2;
+  color: $gray-color;
   font-size: 16px;
   position: absolute;
   left: 10px;
   top: 100px;
-}
 
-.textarea__placeholderActive {
-  top: 5px;
-  font-size: 12px;
-  color: #328bca;
-}
-
-.textarea {
-  resize: none;
-  flex: 1;
-  border: 0;
-  margin: 0;
-  padding: 0;
-  background: #fff;
-  outline: none;
-}
-
-.wrapperActive {
-  background: white;
-  border: 1px solid #328bca;
-  box-shadow: 0 0 0 1px #328bca;
+  &.textarea__placeholderActive {
+    top: 5px;
+    font-size: 12px;
+    color: $blue-color;
+  }
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
-  <div class="input-wrapper" v-bind:class="{inputActiveLine: focused}">
+  <div class="input-wrapper" v-bind:class="{'input-active-line': focused}">
     <div
       class="input-placeholder"
-      v-bind:class="{placeholderActive: value.trim().length || focused}"
+      v-bind:class="{'input-placeholder__active': value.trim().length || focused}"
     >{{placeholder ? placeholder : 'Text'}}</div>
     <input
       type="text"
@@ -36,19 +36,42 @@ export default {
       focused: false,
     };
   },
-  mounted() {
-    // this.inputText = this.$props.text;
-  },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+$blue-color: #328bca;
+
 .input-wrapper {
   padding-top: 13px;
   position: relative;
   min-height: 40px;
   width: 100%;
   overflow: hidden;
+
+  &:before {
+    content: "";
+    position: absolute;
+    bottom: 1px;
+    height: 1px;
+    background: #c2c2c2;
+    width: 100%;
+  }
+
+  &:after {
+    transition: all ease 0.3s;
+    content: "";
+    position: absolute;
+    bottom: 0%;
+    transform: translateX(-100%);
+    height: 2px;
+    background: $blue-color;
+    width: 100%;
+  }
+
+  &.input-active-line:after {
+    transform: translateX(0%);
+  }
 }
 
 .input-placeholder {
@@ -58,32 +81,12 @@ export default {
   position: absolute;
   left: 0%;
   top: 48%;
-}
 
-.placeholderActive {
-  top: 0%;
-  font-size: 12px;
-  color: #328bca;
-}
-
-.input-wrapper:before {
-  content: "";
-  position: absolute;
-  bottom: 1px;
-  height: 1px;
-  background: #c2c2c2;
-  width: 100%;
-}
-
-.input-wrapper:after {
-  transition: all ease 0.3s;
-  content: "";
-  position: absolute;
-  bottom: 0%;
-  transform: translateX(-100%);
-  height: 2px;
-  background: #328bca;
-  width: 100%;
+  &.input-placeholder__active {
+    top: 0%;
+    font-size: 12px;
+    color: $blue-color;
+  }
 }
 
 input {
@@ -94,9 +97,5 @@ input {
   background: none;
   outline: none;
   border: 0;
-}
-
-.inputActiveLine:after {
-  transform: translateX(0%);
 }
 </style>

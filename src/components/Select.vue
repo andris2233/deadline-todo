@@ -60,7 +60,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+$blue-color: #328bca;
+
 .select {
   position: relative;
   width: 270px;
@@ -73,14 +75,14 @@ export default {
   border-radius: 10px;
   transition: 0.1s;
   font-size: 13px;
-}
 
-.select-active {
-  border-radius: 0;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  border: 1px solid #328bca;
-  color: #328bca;
+  &.select-active {
+    border-radius: 0;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border: 1px solid $blue-color;
+    color: $blue-color;
+  }
 }
 
 .selected-prop {
@@ -98,10 +100,10 @@ export default {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-}
 
-.activeArrow {
-  transform: rotate(180deg);
+  &.activeArrow {
+    transform: rotate(180deg);
+  }
 }
 
 .select-options {
@@ -117,24 +119,20 @@ export default {
   z-index: -1;
   transform-origin: top center;
   transform: scaleY(0);
-  background: #328bca;
+  background: $blue-color;
   color: #000;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   overflow: hidden;
   box-sizing: border-box;
-  border: 1px solid #328bca;
-}
+  border: 1px solid $blue-color;
 
-.optionsActive {
-  top: 34px;
-  opacity: 1;
-  z-index: 2;
-  transform: scaleY(1);
-}
-
-.option-active {
-  font-weight: 600;
+  &.optionsActive {
+    top: 34px;
+    opacity: 1;
+    z-index: 2;
+    transform: scaleY(1);
+  }
 }
 
 .option {
@@ -144,10 +142,14 @@ export default {
   transition: all ease 0.2s;
   box-sizing: border-box;
   background: #fff;
-}
 
-.option:hover {
-  background: #328bca;
-  color: white;
+  &:hover {
+    background: $blue-color;
+    color: white;
+  }
+
+  &.option-active {
+    font-weight: 600;
+  }
 }
 </style>

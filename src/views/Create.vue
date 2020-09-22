@@ -1,29 +1,31 @@
 <template>
-  <form>
-    <div class="form-element__wrapper">
+  <form class="create-form">
+    <FormElementWrapper>
       <FormHeader :value="'Создать задачу'" style="text-align:center">{{'Создать задачу'}}</FormHeader>
-    </div>
+    </FormElementWrapper>
 
-    <div class="form-content">
-      <div class="form-element__wrapper">
+    <div class="create-form__content">
+      <FormElementWrapper>
         <InputText v-bind:text="title" v-bind:placeholder="'Название'" v-model="title" />
-      </div>
+      </FormElementWrapper>
 
-      <div class="form-element__wrapper">
+      <FormElementWrapper>
         <TextArea v-bind:text="description" v-bind:placeholder="'Описание'" v-model="description" />
-      </div>
+      </FormElementWrapper>
 
-      <div class="form-element__wrapper">
+      <FormElementWrapper>
         <Chips
           v-bind:tags="tags"
           v-bind:placeholder="'Тэги'"
           @create-tag="createTag"
           @remove-tag="removeTag"
         />
-      </div>
-      <div class="form-element__wrapper">
+      </FormElementWrapper>
+
+      <FormElementWrapper>
         <Datepicker v-bind:placeholder="'Дедлайн'" v-model="date" v-bind:date="date" />
-      </div>
+      </FormElementWrapper>
+
       <FormButton :type="'button'" @click="createTask" :disabled="!formValid">{{'Создать'}}</FormButton>
     </div>
   </form>
@@ -36,6 +38,7 @@ import Datepicker from "@/components/Datepicker";
 import TextArea from "@/components/TextArea";
 import FormHeader from "@/components/FormHeader";
 import FormButton from "@/components/FormButton";
+import FormElementWrapper from "@/components/FormElementWrapper";
 
 export default {
   data() {
@@ -63,6 +66,7 @@ export default {
     TextArea,
     FormHeader,
     FormButton,
+    FormElementWrapper,
   },
   methods: {
     createTag(tag) {
@@ -95,8 +99,8 @@ export default {
 };
 </script>
 
-<style scoped>
-form {
+<style lang="scss" scoped>
+.create-form {
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -107,67 +111,13 @@ form {
   background: #fff;
   border: 1px solid #dadada;
   overflow: hidden;
-}
 
-.form-content {
-  flex: 1;
-  padding: 0 45px 45px 45px;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
+  .create-form__content {
+    flex: 1;
+    padding: 0 45px 45px 45px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
-
-.form-element__wrapper {
-  margin-bottom: 10px;
-}
-
-.create-header {
-  font-size: 24px;
-  font-weight: 700;
-  text-align: center;
-  padding: 30px 0;
-  background: #fcfcfc;
-  border-bottom: 1px solid #dadada;
-  color: #3f3f3f;
-}
-
-button {
-  border: 0;
-  background: #328bca;
-  padding: 8px 0;
-  border-radius: 20px;
-  transition: all ease 0.3s;
-  color: white;
-  width: 110px;
-  outline: none;
-  box-shadow: 0 0px 5px #328bca;
-}
-
-button:hover {
-  transform: scale(1.1);
-  background: white;
-  box-shadow: 0 0px 10px #328bca;
-  color: #328bca;
-}
-
-button:active {
-  transform: scale(1);
-}
-
-button:disabled,
-button:disabled:hover {
-  background: #328bca;
-  box-shadow: 0 0px 5px #328bca;
-  color: white;
-  opacity: 0.5;
-  transform: scale(1);
-}
-
-/* button:disabled:hover {
-  background: #328bca;
-  box-shadow: 0 5px 5px #328bca;
-  color: white;
-  box-shadow: none;
-  transform: scale(1);
-} */
 </style>
