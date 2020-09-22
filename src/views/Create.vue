@@ -1,7 +1,7 @@
 <template>
   <form class="create-form">
     <FormElementWrapper>
-      <FormHeader :value="'Создать задачу'" style="text-align:center">{{'Создать задачу'}}</FormHeader>
+      <FormHeader :value="'Создать задачу'" class="create-form__header">{{'Создать задачу'}}</FormHeader>
     </FormElementWrapper>
 
     <div class="create-form__content">
@@ -118,6 +118,13 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .create-form__header {
+    font-weight: 700;
+    font-size: 22px;
+    color: #3f3f3f;
+    text-align: center;
   }
 }
 </style>

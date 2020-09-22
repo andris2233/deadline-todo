@@ -7,9 +7,9 @@ export default Vue.directive('click-outside', {
                 binding.value(e);
             }
         }
-        document.addEventListener("click", el.clickHandler);
+        document.addEventListener("mousedown", el.clickHandler);
     },
     unbind: function (el) {
-        document.removeEventListener("click", el.clickHandler);
+        document.removeEventListener("mousedown", el.clickHandler);
     }
 });

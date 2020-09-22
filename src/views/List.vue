@@ -25,22 +25,38 @@
           <TableButton
             :theme="'green'"
             class="button-margin"
-            @click="$store.dispatch('completeTask', task.id)"
+            :disabled="task.status==='completed'"
+            @click="showPopup('COMPLETE', task.id)"
           >
             <i class="material-icons">done</i>
           </TableButton>
-          <TableButton :theme="'red'" @click="$store.dispatch('removeTask', task.id)">
+          <TableButton :theme="'red'" @click="showPopup('DELETE', task.id)">
             <i class="material-icons">delete</i>
           </TableButton>
         </div>
       </div>
     </transition-group>
+    <component :is="popup" @cancel="popup=''">
+      <template v-slot:header>
+        <div class="popup-header">{{popupQuestion}}</div>
+      </template>
+      <template v-slot:body>{{'После подтверждения отменить действие будет невозможно!'}}</template>
+      <template v-slot:control>
+        <div class="popup-btns">
+          <FormButton @click="popupCommit">{{popupCommitButton}}</FormButton>
+          <FormButton @click="popup=''">{{'Отмена'}}</FormButton>
+        </div>
+      </template>
+    </component>
   </div>
 </template>
 
 <script>
 import Select from "@/components/Select";
 import TableButton from "@/components/TableButton";
+import Popup from "@/components/Popup";
+import FormButton from "@/components/FormButton";
+
 export default {
   data() {
     return {
@@ -66,6 +82,9 @@ export default {
         title: "Все",
         value: "all",
       },
+      popup: "",
+      popupType: "DELETE",
+      currentId: null,
     };
   },
   computed: {
@@ -77,6 +96,20 @@ export default {
       return this.$store.getters.getAllTasks.filter(
         (t) => t.status === this.filter.value
       );
+    },
+    popupQuestion() {
+      if (this.popupType === "DELETE") {
+        return "Вы действительно хотите удалить задачу?";
+      } else {
+        return "Завершили выполнение задачи?";
+      }
+    },
+    popupCommitButton() {
+      if (this.popupType === "DELETE") {
+        return "Удалить";
+      } else {
+        return "Завершить";
+      }
     },
   },
   filters: {
@@ -91,7 +124,23 @@ export default {
       }
     },
   },
-  components: { Select, TableButton },
+  components: { Select, TableButton, Popup, FormButton },
+  methods: {
+    popupCommit() {
+      if (this.popupType === "DELETE") {
+        this.$store.dispatch("removeTask", this.currentId);
+        this.popup = "";
+      } else {
+        this.$store.dispatch("completeTask", this.currentId);
+        this.popup = "";
+      }
+    },
+    showPopup(type, id) {
+      this.currentId = id;
+      this.popupType = type;
+      this.popup = "Popup";
+    },
+  },
 };
 </script>
 
@@ -148,6 +197,9 @@ export default {
 
 .normal-cell {
   flex: 1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .big-cell {
@@ -188,6 +240,19 @@ a {
 
 .button-margin {
   margin: 0 7px 0 0;
+}
+
+.popup-header {
+  font-weight: 700;
+  font-size: 18px;
+  color: #328bca;
+  padding: 5px 0;
+}
+
+.popup-btns {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
 }
 
 .rows-enter-active,
