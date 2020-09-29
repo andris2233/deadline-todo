@@ -1,32 +1,36 @@
 <template>
-  <transition-group
-    name="tag"
-    tag="div"
-    class="tags-row"
-    v-bind:class="{'tags-row__active':focused}"
+  <transition-group name="tag"
+                    tag="div"
+                    class="tags-row"
+                    v-bind:class="{'tags-row__active':focused}"
   >
-    <div
-      class="tags-placeholder"
-      v-bind:class="{'tags-placeholder__active': tags.length || focused || tag.trim().length}"
-      key="placeholder"
+    <div :class="{'tags-placeholder__active': isActiveInput}"
+         class="tags-placeholder"
+         key="placeholder"
     >{{placeholder}}</div>
-    <div class="tag" v-for="tag in tags" :key="tag.id">
+    <div v-for="tag in tags" 
+         :key="tag.id"
+         class="tag" >
+  
       <div class="tag-name">{{tag.name}}</div>
+
       <transition name="icon-close">
-        <i class="material-icons tag-icon" @click="removeTag(tag.id)" v-if="!disabled">close</i>
+        <i v-if="!disabled"
+           @click="$emit('remove-tag', tag.id)"
+           class="material-icons tag-icon"
+        >close</i>
       </transition>
     </div>
-    <input
-      type="text"
-      ref="tagsInput"
-      class="tags-input"
-      @keyup.enter="createTag"
-      @focus="focused=true"
-      @blur="focused=false"
-      v-model="tag"
-      autocomplete="off"
-      key="input"
-      :disabled="disabled"
+    <input v-model="tag"
+           :disabled="disabled"
+           ref="tagsInput"
+           @keyup.enter="createTag"
+           @focus="focused=true"
+           @blur="onBlur"
+           type="text"
+           autocomplete="off"
+           key="input"
+           class="tags-input"
     />
   </transition-group>
 </template>
@@ -41,7 +45,7 @@ export default {
     placeholder: {
       type: String,
       required: false,
-      default: "Tags",
+      default: 'Tags',
     },
     disabled: {
       type: Boolean,
@@ -51,37 +55,32 @@ export default {
   },
   data() {
     return {
-      tag: "",
+      tag: '',
       focused: false,
     };
   },
-  methods: {
-    deleteTag(id) {
-      this.$emit("delete-tag", id);
+  computed: {
+    isActiveInput() {
+      return !!(this.tags.length || this.focused || this.tag.trim().length);
     },
+  },
+  methods: {
     createTag() {
       const cleanTag = this.tag.trim();
-      if (
-        !cleanTag ||
-        this.$props.tags.find((item) => item.name === cleanTag)
-      ) {
-        this.tag = "";
-        return;
+      if (!cleanTag || this.$props.tags.find((item) => item.name === cleanTag)) {
+        this.tag = '';
+      } else {
+        const tag = {
+          name: cleanTag,
+          id: Date.now(),
+        };
+        this.tag = '';
+        this.$emit('create-tag', tag);
       }
-      const tag = {
-        name: cleanTag,
-        id: Date.now(),
-      };
-      this.tag = "";
-      this.$emit("create-tag", tag);
     },
-    removeTag(id) {
-      this.$emit("remove-tag", id);
-    },
-    inputFocus() {
-      if (this.focused) {
-        this.$refs.tagsInput.focus();
-      }
+    onBlur(){
+      this.focused = false;
+      this.createTag();
     },
   },
 };
@@ -122,7 +121,7 @@ $gray-color: #c2c2c2;
     border-radius: 5px;
   }
 
-  &.tags-row__active:after {
+  &__active:after {
     transform: translateX(0%);
   }
 }
@@ -135,7 +134,7 @@ $gray-color: #c2c2c2;
   left: 0%;
   top: 48%;
 
-  &.tags-placeholder__active {
+  &__active {
     top: 0%;
     font-size: 12px;
     color: $blue-color;

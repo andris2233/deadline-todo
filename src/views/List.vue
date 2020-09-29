@@ -70,6 +70,7 @@ import Popup from "@/components/Popup";
 import FormButton from "@/components/FormButton";
 
 export default {
+  components: { Select, TableButton, Popup, FormButton },
   data() {
     return {
       options: [
@@ -162,7 +163,6 @@ export default {
       }
     },
   },
-  components: { Select, TableButton, Popup, FormButton },
   methods: {
     popupCommit() {
       if (this.popupType === "DELETE") {
