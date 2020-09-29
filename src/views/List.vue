@@ -2,46 +2,58 @@
   <div class="task-list">
     <div class="task-list__header">
       <div class="haeder__text">Список задач</div>
-      <Select :options="options" v-model="filter" :selected="options[0]" />
+      <Select :options="options"
+              v-model="filter"
+              :selected="options[0]"
+      />
     </div>
-    <transition-group name="rows" tag="div" class="task-list__content">
+    <transition-group name="rows" 
+                      tag="div" 
+                      class="task-list__content"
+    >
       <div class="task-row" :key="'header'">
-        <div class="cell normal-cell cell-header">№</div>
-        <div class="cell normal-cell cell-header">Название</div>
-        <div class="cell big-cell cell-header">Описание</div>
-        <div class="cell normal-cell cell-header">Дедлайн</div>
-        <div class="cell normal-cell cell-header">Статус</div>
-        <div class="cell normal-cell cell-header">Управление</div>
-      </div>
-      <div class="task-row" v-for="(task, index) in tasks" :key="task.id">
-        <div class="cell normal-cell">{{index + 1}}</div>
-        <div class="cell normal-cell">
-          <router-link :to="'/task/' + task.id">{{task.title}}</router-link>
+        <div v-for="cell in headerCells"
+             :key="cell.title"
+             :class="{'cell__big': cell.bigSize}"
+             class="cell cell__header"
+        >{{cell.title}}
         </div>
-        <div class="cell big-cell">{{task.description}}</div>
-        <div class="cell normal-cell">{{task.date}}</div>
-        <div class="cell normal-cell">{{task.status | statusFormat}}</div>
-        <div class="cell normal-cell">
-          <TableButton
-            :theme="'green'"
-            class="button-margin"
-            :disabled="task.status==='completed'"
-            @click="showPopup('COMPLETE', task.id)"
+      </div>
+
+      <div class="task-row" v-for="(task, index) in tasks" :key="task.id">
+        <div class="cell">{{index + 1}}</div>
+        <div class="cell">
+          <router-link :to="`/task/${task.id}`">{{task.title}}</router-link>
+        </div>
+        <div class="cell cell__big">{{task.description}}</div>
+        <div class="cell">{{task.date}}</div>
+        <div class="cell">{{task.status | statusFormat}}</div>
+        <div class="cell">
+          <TableButton :theme="'green'"
+                       :disabled="task.status==='completed'"
+                       @click="showPopup('COMPLETE', task.id)"
+                       class="button-margin"
           >
             <i class="material-icons">done</i>
           </TableButton>
-          <TableButton :theme="'red'" @click="showPopup('DELETE', task.id)">
+          <TableButton :theme="'red'" 
+                       @click="showPopup('DELETE', task.id)"
+          >
             <i class="material-icons">delete</i>
           </TableButton>
         </div>
       </div>
     </transition-group>
     <component :is="popup" @cancel="popup=''">
-      <template v-slot:header>
+      <template #header>
         <div class="popup-header">{{popupQuestion}}</div>
       </template>
-      <template v-slot:body>{{'После подтверждения отменить действие будет невозможно!'}}</template>
-      <template v-slot:control>
+
+      <template #body>
+        {{'После подтверждения отменить действие будет невозможно!'}}
+      </template>
+
+      <template #control>
         <div class="popup-btns">
           <FormButton @click="popupCommit">{{popupCommitButton}}</FormButton>
           <FormButton @click="popup=''">{{'Отмена'}}</FormButton>
@@ -76,6 +88,32 @@ export default {
         {
           title: "Просроченные",
           value: "expired",
+        },
+      ],
+      headerCells: [
+        {
+          title: '№',
+          bigSize: false,
+        },
+        {
+          title: 'Название',
+          bigSize: false,
+        },
+        {
+          title: 'Опсиание',
+          bigSize: true,
+        },
+        {
+          title: 'Дедлайн',
+          bigSize: false,
+        },
+        {
+          title: 'Статус',
+          bigSize: false,
+        },
+        {
+          title: 'Управление',
+          bigSize: false,
         },
       ],
       filter: {
@@ -155,27 +193,25 @@ export default {
   overflow: hidden;
   min-height: 50vh;
   max-height: 90vh;
-}
-
-.task-list__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px;
-  background: #fcfcfc;
-  border-bottom: 1px solid #dadada;
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background: #fcfcfc;
+    border-bottom: 1px solid #dadada;
+  }
+  &__content {
+    position: relative;
+    padding: 0 20px 20px 20px;
+    flex: 1;
+  }
 }
 
 .haeder__text {
   font-size: 18px;
   font-weight: 600;
   color: #3f3f3f;
-}
-
-.task-list__content {
-  position: relative;
-  padding: 0 20px 20px 20px;
-  flex: 1;
 }
 
 .task-row {
@@ -189,24 +225,16 @@ export default {
 
 .cell {
   text-align: left;
-}
-
-.cell-header {
-  font-weight: 600;
-}
-
-.normal-cell {
   flex: 1;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-}
-
-.big-cell {
-  flex: 2;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+  &__header{
+    font-weight: 600;
+  }
+  &__big{
+    flex: 2;
+  }
 }
 
 a {
@@ -216,11 +244,9 @@ a {
   overflow: hidden;
   transition: 0.2s;
   position: relative;
-
   &:visited {
     color: green;
   }
-
   &:after {
     content: "";
     height: 2px;
@@ -232,7 +258,6 @@ a {
     transform: scaleX(0);
     transition: 0.2s;
   }
-
   &:hover:after {
     transform: scaleX(1);
   }
