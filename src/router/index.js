@@ -7,17 +7,17 @@ const routes = [
   {
     path: '/',
     name: 'Create',
-    component: () => import('../views/Create.vue')
+    component: () => import('../views/PageCreate.vue')
   },
   {
     path: '/list',
     name: 'List',
-    component: () => import('../views/List.vue')
+    component: () => import('../views/PageList.vue')
   },
   {
     path: '/task/:id',
     name: 'Task',
-    component: () => import('../views/Task.vue')
+    component: () => import('../views/PageTask.vue')
   }
 ]
 
