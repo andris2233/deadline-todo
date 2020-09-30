@@ -1,18 +1,16 @@
 <template>
-  <div class="textarea-wrapper" v-bind:class="{wrapperActive: focused}">
-    <div
-      class="textarea__placeholder"
-      v-bind:class="{textarea__placeholderActive: focused || value.trim().length}"
-      @click="textareaFocus"
+  <div v-bind:class="{'wrapper-active': focused}" class="textarea-wrapper">
+    <div v-bind:class="{'textarea__placeholder-active': focused || value.trim().length}"
+         @click="textareaFocus"
+         class="textarea__placeholder"
     >{{placeholder}}</div>
-    <textarea
-      class="textarea"
-      @focus="focused=true"
-      @blur="focused=false"
-      :value="value"
-      @input="$emit('input', $event.target.value);"
-      :disabled="disabled"
-      ref="textarea"
+    <textarea :value="value"
+              :disabled="disabled"
+              @focus="focused=true"
+              @blur="focused=false"
+              @input="$emit('input', $event.target.value);"
+              ref="textarea"
+              class="textarea"
     ></textarea>
   </div>
 </template>
@@ -68,7 +66,7 @@ $gray-color: #c2c2c2;
   overflow: hidden;
   background: #fff;
 
-  &.wrapperActive {
+  &.wrapper-active {
     background: #fff;
     border: 1px solid $blue-color;
     box-shadow: 0 0 0 1px $blue-color;
@@ -93,7 +91,7 @@ $gray-color: #c2c2c2;
   left: 10px;
   top: 100px;
 
-  &.textarea__placeholderActive {
+  &-active {
     top: 5px;
     font-size: 12px;
     color: $blue-color;
