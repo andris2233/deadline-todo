@@ -25,7 +25,7 @@
       >
         <div class="cell">{{index + 1}}</div>
         <div class="cell">
-          <router-link :to="`/task/${task.id}`">{{task.title}}</router-link>
+          <router-link :to="`/list/task/${task.id}`">{{task.title}}</router-link>
         </div>
         <div class="cell cell__big">{{task.description}}</div>
         <div class="cell">{{task.date}}</div>

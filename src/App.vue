@@ -3,7 +3,7 @@
     <div id="nav">
       <div class="nav__header">Задачи</div>
       <div class="nav-menu">
-        <router-link to="/" class="nav-link">Создать</router-link>
+        <router-link to="/create" class="nav-link">Создать</router-link>
         <router-link to="/list" class="nav-link">Список</router-link>
       </div>
     </div>
@@ -38,7 +38,7 @@
   width: 100%;
   box-sizing: border-box;
 
-  a.router-link-exact-active {
+  a.router-link-active {
     background: #1d6ca5;
   }
 }

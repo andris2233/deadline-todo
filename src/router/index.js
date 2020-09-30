@@ -5,7 +5,7 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/create',
     name: 'Create',
     component: () => import('../views/PageCreate.vue')
   },
@@ -15,9 +15,13 @@ const routes = [
     component: () => import('../views/PageList.vue')
   },
   {
-    path: '/task/:id',
+    path: '/list/task/:id',
     name: 'Task',
     component: () => import('../views/PageTask.vue')
+  },
+  {
+    path: '*',
+    redirect: {name: 'Create'}
   }
 ]
 
