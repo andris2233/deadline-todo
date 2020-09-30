@@ -5,7 +5,7 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/create',
+    path: '/',
     name: 'Create',
     component: () => import('../views/PageCreate.vue')
   },

@@ -3,7 +3,7 @@
     <div id="nav">
       <div class="nav__header">Задачи</div>
       <div class="nav-menu">
-        <router-link to="/create" class="nav-link">Создать</router-link>
+        <router-link to="/" class="nav-link" exact>Создать</router-link>
         <router-link to="/list" class="nav-link">Список</router-link>
       </div>
     </div>
