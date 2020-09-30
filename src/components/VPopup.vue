@@ -3,10 +3,10 @@
     <div class="modal-background">
       <transition name="show" appear>
         <div class="modal" v-click-outside="cancel">
-          <FormHeader class="modal__header">
+          <VFormHeader class="modal__header">
             <slot name="header">header</slot>
             <i class="material-icons icon" @click="cancel">close</i>
-          </FormHeader>
+          </VFormHeader>
           <div class="modal__content">
             <div class="modal__body">
               <slot name="body">body</slot>
@@ -22,10 +22,10 @@
 </template>
 
 <script>
-import FormHeader from "@/components/FormHeader";
+import VFormHeader from "@/components/VFormHeader";
 
 export default {
-  components: { FormHeader },
+  components: { VFormHeader },
   methods: {
     cancel() {
       this.$emit("cancel");
@@ -58,26 +58,23 @@ export default {
   flex-direction: column;
   align-items: stretch;
   background: white;
-}
-
-.modal__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 25px 15px;
-}
-
-.modal__content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  padding: 15px;
-}
-
-.modal__body {
-  flex: 1;
-  border-bottom: 1px solid #dadada;
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 25px 15px;
+  }
+  &__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 15px;
+  }
+  &__body {
+    flex: 1;
+    border-bottom: 1px solid #dadada;
+  }
 }
 
 .icon {

@@ -1,80 +1,77 @@
 <template>
   <div class="task">
-    <FormElementWrapper>
-      <FormHeader>
+    <VFormElementWrapper>
+      <VFormHeader>
         <div class="task__header">
-          <InputText
-            v-bind:text="taskCopy.title"
-            v-model="taskCopy.title"
-            v-bind:placeholder="'Название'"
-            :disabled="disabled"
+          <VInputText v-model="taskCopy.title"
+                      :text="taskCopy.title"
+                      :placeholder="label.title"
+                      :disabled="disabled"
           />
-          <i
-            class="material-icons edit"
-            :class="[disabled ? 'edit__disable' : 'edit__enable']"
-            @click="disabled=false"
+          <i @click="disabled=false"
+             :class="[disabled ? 'edit__disable' : 'edit__enable']"
+             class="material-icons edit"
           >edit</i>
         </div>
-      </FormHeader>
-    </FormElementWrapper>
+      </VFormHeader>
+    </VFormElementWrapper>
     <div class="task__content">
-      <FormElementWrapper>
-        <TextArea
-          :disabled="disabled"
-          v-model="taskCopy.description"
-          v-bind:placeholder="'Описание'"
+      <VFormElementWrapper>
+        <VTextarea v-model="taskCopy.description"
+                   :disabled="disabled"
+                   :placeholder="label.description"
         />
-      </FormElementWrapper>
+      </VFormElementWrapper>
 
-      <FormElementWrapper>
-        <Chips
-          :disabled="disabled"
-          :tags="taskCopy.tags"
-          v-bind:placeholder="'Тэги'"
-          @create-tag="createTag"
-          @remove-tag="removeTag"
+      <VFormElementWrapper>
+        <VTags :disabled="disabled"
+               :tags="taskCopy.tags"
+               :placeholder="label.tags"
+               @create-tag="createTag"
+               @remove-tag="removeTag"
         />
-      </FormElementWrapper>
+      </VFormElementWrapper>
 
-      <FormElementWrapper>
-        <Datepicker
-          :disabled="disabled"
-          :date="taskCopy.date"
-          v-model="taskCopy.date"
-          v-bind:placeholder="'Дедлайн'"
+      <VFormElementWrapper>
+        <VDatepicker v-model="taskCopy.date"
+                     :disabled="disabled"
+                     :date="taskCopy.date"
+                     :placeholder="label.date"
         />
-      </FormElementWrapper>
+      </VFormElementWrapper>
 
       <transition name="buttons" mode="out-in">
         <div v-if="disabled" :key="'not-edit'">
-          <TableButton
-            @click="popupType='COMPLETE'; popup='Popup'"
-            :theme="'green'"
-            class="button-margin"
-            :disabled="completeButtonDisabled"
+          <VTableButton @click="showPopup(popupTypes.COMPLETE)"
+                        :theme="'green'"
+                        :disabled="completeButtonDisabled"
+                        class="button-margin"
           >
             <i class="material-icons">done</i>
-          </TableButton>
-          <TableButton @click="popupType='DELETE'; popup='Popup'" :theme="'red'">
+          </VTableButton>
+          <VTableButton @click="showPopup(popupTypes.DELETE)" :theme="'red'">
             <i class="material-icons">delete</i>
-          </TableButton>
+          </VTableButton>
         </div>
 
         <div v-else :key="'edit'">
-          <FormButton @click="saveTask" class="button-margin" :disabled="!validSave">{{'Сохранить'}}</FormButton>
-          <FormButton @click="cancelChanges">{{'Отмена'}}</FormButton>
+          <VFormButton @click="saveTask"
+                       :disabled="!validSave"
+                       class="button-margin"
+          >{{'Сохранить'}}</VFormButton>
+          <VFormButton @click="cancelChanges">{{label.cancel}}</VFormButton>
         </div>
       </transition>
 
       <component :is="popup" @cancel="popup=''">
-        <template v-slot:header>
+        <template #header>
           <div class="popup-header">{{popupQuestion}}</div>
         </template>
-        <template v-slot:body>{{'После подтверждения отменить действие будет невозможно!'}}</template>
-        <template v-slot:control>
+        <template #body>{{label.warning}}</template>
+        <template #control>
           <div class="popup-btns">
-            <FormButton @click="popupCommit">{{popupCommitButton}}</FormButton>
-            <FormButton @click="popup=''">{{'Отмена'}}</FormButton>
+            <VFormButton @click="popupCommit">{{popupCommitButton}}</VFormButton>
+            <VFormButton @click="popup=''">{{label.cancel}}</VFormButton>
           </div>
         </template>
       </component>
@@ -83,74 +80,75 @@
 </template>
 
 <script>
-import TextArea from "@/components/TextArea";
-import Chips from "@/components/Chips";
-import Datepicker from "@/components/Datepicker";
-import FormHeader from "@/components/FormHeader";
-import FormElementWrapper from "@/components/FormElementWrapper";
-import FormButton from "@/components/FormButton";
-import TableButton from "@/components/TableButton";
-import InputText from "@/components/InputText";
-import Popup from "@/components/Popup";
+import VTextarea from "@/components/VTextarea";
+import VTags from "@/components/VTags";
+import VDatepicker from "@/components/VDatepicker";
+import VFormHeader from "@/components/VFormHeader";
+import VFormElementWrapper from "@/components/VFormElementWrapper";
+import VFormButton from "@/components/VFormButton";
+import VTableButton from "@/components/VTableButton";
+import VInputText from "@/components/VInputText";
+import VPopup from "@/components/VPopup";
 
 export default {
-  computed: {
-    task() {
-      return this.$store.getters.taskById(this.$route.params.id);
-    },
-    validSave() {
-      if (
-        this.taskCopy.title.trim() &&
-        this.taskCopy.tags.length &&
-        this.taskCopy.description.trim() &&
-        this.taskCopy.date
-      ) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-    popupQuestion() {
-      if (this.popupType === "DELETE") {
-        return "Вы действительно хотите удалить задачу?";
-      } else {
-        return "Завершили выполнение задачи?";
-      }
-    },
-    popupCommitButton() {
-      if (this.popupType === "DELETE") {
-        return "Удалить";
-      } else {
-        return "Завершить";
-      }
-    },
-    completeButtonDisabled() {
-      return this.taskCopy.status === "completed";
-    },
-  },
-  created() {
-    this.taskCopy = JSON.parse(
-      JSON.stringify(this.$store.getters.taskById(this.$route.params.id))
-    );
+  components: {
+    VTextarea,
+    VTags,
+    VDatepicker,
+    VFormHeader,
+    VFormElementWrapper,
+    VTableButton,
+    VFormButton,
+    VInputText,
+    VPopup,
   },
   data() {
     return {
       disabled: true,
       taskCopy: null,
-      popup: "",
-      popupType: "DELETE",
+      popup: '',
+      popupType: '',
+      popupTypes: {
+        DELETE: 'DELETE',
+        COMPLETE: 'COMPLETE',
+      },
+      label: {
+        title: 'Название',
+        description: 'Описание',
+        tags: 'Тэги',
+        date: 'Дедлайн',
+        cancel: 'Отмена',
+        warning: 'После подтверждения отменить действие будет невозможно!',
+        deleteQuestion: "Вы действительно хотите удалить задачу?",
+        completeQuestion: "Завершили выполнение задачи?",
+        deleteButton: "Удалить",
+        completeButton: "Завершить",
+      }
     };
   },
-  components: {
-    TextArea,
-    Chips,
-    Datepicker,
-    FormHeader,
-    FormElementWrapper,
-    TableButton,
-    FormButton,
-    InputText,
-    Popup,
+  computed: {
+    task() {
+      return this.$store.getters.taskById(this.$route.params.id);
+    },
+    validSave() {
+      const { title, tags, description, date } = this.taskCopy;
+      return !!(title.trim() && tags.length && description.trim() && date);
+    },
+    popupQuestion() {
+      if (this.popupType === this.popupTypes.DELETE) {
+        return this.label.deleteQuestion;
+      }
+      return this.label.completeQuestion;
+    },
+    popupCommitButton() {
+      if (this.popupType === this.popupTypes.DELETE) {
+        return this.label.deleteButton;
+      }
+      return this.label.completeButton;
+    },
+    completeButtonDisabled() {
+      return this.taskCopy.status === "completed";
+    },
   },
   methods: {
     popupCommit() {
@@ -162,19 +160,17 @@ export default {
         this.$router.push("/list");
       }
     },
+    showPopup(popupType){
+      this.popupType = popupType;
+      this.popup = 'VPopup';
+    },
     cancelChanges() {
-      this.taskCopy.description = this.$store.getters.taskById(
-        this.$route.params.id
-      ).description;
-      this.taskCopy.title = this.$store.getters.taskById(
-        this.$route.params.id
-      ).title;
-      this.taskCopy.date = this.$store.getters.taskById(
-        this.$route.params.id
-      ).date;
-      this.taskCopy.tags = [
-        ...this.$store.getters.taskById(this.$route.params.id).tags,
-      ];
+      const { taskById } = this.$store.getters;
+      const { id } = this.$route.params;
+      this.taskCopy.description = taskById(id).description;
+      this.taskCopy.title = taskById(id).title;
+      this.taskCopy.date = taskById(id).date;
+      this.taskCopy.tags = [...taskById(id).tags,];
       this.disabled = true;
     },
     saveTask() {
@@ -188,6 +184,11 @@ export default {
       this.taskCopy.tags = this.taskCopy.tags.filter((tag) => tag.id !== id);
     },
   },
+  created() {
+    const { taskById } = this.$store.getters;
+    const { id } = this.$route.params;
+    this.taskCopy = JSON.parse(JSON.stringify(taskById(id)));
+  },
 };
 </script>
 
@@ -199,15 +200,13 @@ export default {
   align-items: stretch;
   background: #fff;
   border-radius: 7px;
-
-  .task__header {
+  &__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 45px;
   }
-
-  .task__content {
+  &__content {
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -220,13 +219,13 @@ export default {
   transition: 0.3s;
   outline: none;
   cursor: pointer;
-  &.edit__disable {
+  &__disable {
     opacity: 0.6;
     &:hover {
       opacity: 1;
     }
   }
-  &.edit__enable {
+  &__enable {
     color: #e67504;
   }
 }

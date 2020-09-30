@@ -1,8 +1,8 @@
 <template>
-  <div v-bind:class="{'wrapper-active': focused}" class="textarea-wrapper">
-    <div v-bind:class="{'textarea__placeholder-active': focused || value.trim().length}"
+  <div :class="{'textarea-wrapper__active': focused}" class="textarea-wrapper">
+    <div :class="{'textarea-placeholder__active': focused || value.trim().length}"
          @click="textareaFocus"
-         class="textarea__placeholder"
+         class="textarea-placeholder"
     >{{placeholder}}</div>
     <textarea :value="value"
               :disabled="disabled"
@@ -20,7 +20,6 @@ export default {
   props: {
     placeholder: {
       type: String,
-      required: false,
       default: "Description",
     },
     value: {
@@ -28,7 +27,6 @@ export default {
     },
     disabled: {
       type: Boolean,
-      required: false,
       default: false,
     },
   },
@@ -65,36 +63,33 @@ $gray-color: #c2c2c2;
   transition: all ease 0.3s;
   overflow: hidden;
   background: #fff;
-
-  &.wrapper-active {
+  &__active {
     background: #fff;
     border: 1px solid $blue-color;
     box-shadow: 0 0 0 1px $blue-color;
   }
-
-  .textarea {
-    resize: none;
-    flex: 1;
-    border: 0;
-    margin: 0;
-    padding: 0;
-    background: #fff;
-    outline: none;
-  }
 }
 
-.textarea__placeholder {
-  transition: 0.5s;
-  color: $gray-color;
-  font-size: 16px;
-  position: absolute;
-  left: 10px;
-  top: 100px;
-
-  &-active {
-    top: 5px;
-    font-size: 12px;
-    color: $blue-color;
+.textarea {
+  resize: none;
+  flex: 1;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  outline: none;
+  &-placeholder {
+    transition: 0.5s;
+    color: $gray-color;
+    font-size: 16px;
+    position: absolute;
+    left: 10px;
+    top: 100px;
+    &__active {
+      top: 5px;
+      font-size: 12px;
+      color: $blue-color;
+    }
   }
 }
 </style>

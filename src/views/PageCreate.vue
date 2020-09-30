@@ -1,72 +1,89 @@
 <template>
   <form class="create-form">
-    <FormElementWrapper>
-      <FormHeader :value="'Создать задачу'" class="create-form__header">{{'Создать задачу'}}</FormHeader>
-    </FormElementWrapper>
+    <VFormElementWrapper>
+      <VFormHeader class="create-form__header">
+        {{label.header}}
+      </VFormHeader>
+    </VFormElementWrapper>
 
     <div class="create-form__content">
-      <FormElementWrapper>
-        <InputText v-bind:text="title" v-bind:placeholder="'Название'" v-model="title" />
-      </FormElementWrapper>
-
-      <FormElementWrapper>
-        <TextArea v-bind:text="description" v-bind:placeholder="'Описание'" v-model="description" />
-      </FormElementWrapper>
-
-      <FormElementWrapper>
-        <Chips
-          v-bind:tags="tags"
-          v-bind:placeholder="'Тэги'"
-          @create-tag="createTag"
-          @remove-tag="removeTag"
+      <VFormElementWrapper>
+        <VInputText v-model="title"
+                    :text="title" 
+                    :placeholder="label.title" 
         />
-      </FormElementWrapper>
+      </VFormElementWrapper>
 
-      <FormElementWrapper>
-        <Datepicker v-bind:placeholder="'Дедлайн'" v-model="date" v-bind:date="date" />
-      </FormElementWrapper>
+      <VFormElementWrapper>
+        <VTextarea v-model="description"
+                   :text="description" 
+                   :placeholder="label.description"
+        />
+      </VFormElementWrapper>
 
-      <FormButton :type="'button'" @click="createTask" :disabled="!formValid">{{'Создать'}}</FormButton>
+      <VFormElementWrapper>
+        <VTags :tags="tags"
+               :placeholder="label.tags"
+               @create-tag="createTag"
+               @remove-tag="removeTag"
+        />
+      </VFormElementWrapper>
+
+      <VFormElementWrapper>
+        <VDatepicker v-model="date"
+                     :placeholder="label.date"
+                     :date="date"
+        />
+      </VFormElementWrapper>
+
+      <VFormButton :type="'button'"
+                   :disabled="!formValid"
+                   @click="createTask"
+      >{{label.create}}</VFormButton>
     </div>
   </form>
 </template>
 
 <script>
-import Chips from "@/components/Chips";
-import InputText from "@/components/InputText";
-import Datepicker from "@/components/Datepicker";
-import TextArea from "@/components/TextArea";
-import FormHeader from "@/components/FormHeader";
-import FormButton from "@/components/FormButton";
-import FormElementWrapper from "@/components/FormElementWrapper";
+import VTags from "@/components/VTags";
+import VInputText from "@/components/VInputText";
+import VDatepicker from "@/components/VDatepicker";
+import VTextarea from "@/components/VTextarea";
+import VFormHeader from "@/components/VFormHeader";
+import VFormButton from "@/components/VFormButton";
+import VFormElementWrapper from "@/components/VFormElementWrapper";
 
 export default {
+  components: {
+    VTags,
+    VInputText,
+    VDatepicker,
+    VTextarea,
+    VFormHeader,
+    VFormButton,
+    VFormElementWrapper,
+  },
   data() {
     return {
       title: "",
       tags: [],
       description: "",
       date: null,
+      label: {
+        header: 'Создать задачу',
+        title: 'Название',
+        description: 'Описание',
+        tags: 'Тэги',
+        date: 'Дедлайн',
+        create: 'Создать',
+      },
     };
   },
   computed: {
     formValid() {
-      return (
-        this.title.trim().length &&
-        this.tags.length &&
-        this.description.trim().length &&
-        this.date
-      );
+      const { title, tags, description, date } = this;
+      return !!(title.trim().length && tags.length && description.trim().length && date);
     },
-  },
-  components: {
-    Chips,
-    InputText,
-    Datepicker,
-    TextArea,
-    FormHeader,
-    FormButton,
-    FormElementWrapper,
   },
   methods: {
     createTag(tag) {
@@ -75,22 +92,14 @@ export default {
     removeTag(id) {
       this.tags = this.tags.filter((tag) => tag.id !== id);
     },
-    changeTitle(title) {
-      this.title = title;
-    },
-    changeDeadline(date) {
-      this.date = date;
-    },
-    changeDescription(description) {
-      this.description = description;
-    },
     createTask() {
+      const { title, tags, description, date } = this;
       this.$store.dispatch("createTask", {
         id: Date.now(),
-        title: this.title,
-        tags: this.tags,
-        description: this.description,
-        date: this.date,
+        title,
+        tags,
+        description,
+        date,
         status: "active",
       });
       this.$router.push("/list");
@@ -111,16 +120,14 @@ export default {
   background: #fff;
   border: 1px solid #dadada;
   overflow: hidden;
-
-  .create-form__content {
+  &__content {
     flex: 1;
     padding: 0 45px 45px 45px;
     display: flex;
     flex-direction: column;
     align-items: stretch;
   }
-
-  .create-form__header {
+  &__header {
     font-weight: 700;
     font-size: 22px;
     color: #3f3f3f;

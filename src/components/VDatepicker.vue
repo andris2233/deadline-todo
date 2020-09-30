@@ -1,18 +1,17 @@
 <template>
-  <div class="datepicker-wrapper" v-bind:class="{'datepicker-wrapper__active': focused}">
-    <label
-      class="datepicker-placeholder"
-      v-bind:class="{'datepicker-placeholder__active': value || focused}"
+  <div :class="{'datepicker-wrapper__active': focused}"
+       class="datepicker-wrapper">
+    <label :class="{'datepicker-placeholder__active': value || focused}"
+           class="datepicker-placeholder"
     >{{placeholder}}</label>
-    <input
-      class="datepicker"
-      type="date"
-      @input="$emit('input', $event.target.value);"
-      @focus="focused=true"
-      @blur="focused=false"
-      :value="value"
-      v-bind:class="{'datepicker__invisible': !value && !focused}"
-      :disabled="disabled"
+    <input :value="value"
+           :class="{'datepicker__invisible': !value && !focused}"
+           :disabled="disabled"
+           @input="$emit('input', $event.target.value);"
+           @focus="focused=true"
+           @blur="focused=false"
+           class="datepicker"
+           type="date"
     />
   </div>
 </template>
@@ -72,23 +71,8 @@ $blue-color: #328bca;
     width: 100%;
   }
 
-  &.datepicker-wrapper__active:after {
+  &__active:after {
     transform: translateX(0%);
-  }
-}
-
-.datepicker-placeholder {
-  transition: 0.5s;
-  color: #c2c2c2;
-  font-size: 15px;
-  position: absolute;
-  left: 0%;
-  top: 48%;
-
-  &.datepicker-placeholder__active {
-    top: 0%;
-    font-size: 12px;
-    color: $blue-color;
   }
 }
 
@@ -102,13 +86,25 @@ $blue-color: #328bca;
   border: 0;
   transition: opacity ease 0.5s;
   cursor: text;
-
   &.datepicker__invisible {
     opacity: 0;
   }
-
   &:disabled {
     cursor: default;
+  }
+  &-placeholder {
+    transition: 0.5s;
+    color: #c2c2c2;
+    font-size: 15px;
+    position: absolute;
+    left: 0%;
+    top: 48%;
+
+    &__active {
+      top: 0%;
+      font-size: 12px;
+      color: $blue-color;
+    }
   }
 }
 </style>

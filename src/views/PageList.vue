@@ -2,9 +2,8 @@
   <div class="task-list">
     <div class="task-list__header">
       <div class="haeder__text">Список задач</div>
-      <Select :options="options"
-              v-model="filter"
-              :selected="options[0]"
+      <VSelect v-model="filter"
+               :options="options"
       />
     </div>
     <transition-group name="rows" 
@@ -20,7 +19,10 @@
         </div>
       </div>
 
-      <div class="task-row" v-for="(task, index) in tasks" :key="task.id">
+      <div v-for="(task, index) in tasks"
+           :key="task.id"
+           class="task-row"
+      >
         <div class="cell">{{index + 1}}</div>
         <div class="cell">
           <router-link :to="`/task/${task.id}`">{{task.title}}</router-link>
@@ -29,18 +31,18 @@
         <div class="cell">{{task.date}}</div>
         <div class="cell">{{task.status | statusFormat}}</div>
         <div class="cell">
-          <TableButton :theme="'green'"
-                       :disabled="task.status==='completed'"
-                       @click="showPopup('COMPLETE', task.id)"
-                       class="button-margin"
+          <VTableButton :theme="'green'"
+                        :disabled="task.status==='completed'"
+                        @click="showPopup('COMPLETE', task.id)"
+                        class="button-margin"
           >
             <i class="material-icons">done</i>
-          </TableButton>
-          <TableButton :theme="'red'" 
-                       @click="showPopup('DELETE', task.id)"
+          </VTableButton>
+          <VTableButton :theme="'red'" 
+                        @click="showPopup('DELETE', task.id)"
           >
             <i class="material-icons">delete</i>
-          </TableButton>
+          </VTableButton>
         </div>
       </div>
     </transition-group>
@@ -55,8 +57,8 @@
 
       <template #control>
         <div class="popup-btns">
-          <FormButton @click="popupCommit">{{popupCommitButton}}</FormButton>
-          <FormButton @click="popup=''">{{'Отмена'}}</FormButton>
+          <VFormButton @click="popupCommit">{{popupCommitButton}}</VFormButton>
+          <VFormButton @click="popup=''">{{'Отмена'}}</VFormButton>
         </div>
       </template>
     </component>
@@ -64,13 +66,13 @@
 </template>
 
 <script>
-import Select from "@/components/Select";
-import TableButton from "@/components/TableButton";
-import Popup from "@/components/Popup";
-import FormButton from "@/components/FormButton";
+import VSelect from "@/components/VSelect";
+import VTableButton from "@/components/VTableButton";
+import VPopup from "@/components/VPopup";
+import VFormButton from "@/components/VFormButton";
 
 export default {
-  components: { Select, TableButton, Popup, FormButton },
+  components: { VSelect, VTableButton, VPopup, VFormButton },
   data() {
     return {
       options: [
@@ -176,7 +178,7 @@ export default {
     showPopup(type, id) {
       this.currentId = id;
       this.popupType = type;
-      this.popup = "Popup";
+      this.popup = "VPopup";
     },
   },
 };

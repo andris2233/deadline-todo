@@ -1,22 +1,20 @@
 <template>
-  <div
-    class="select"
-    :class="{'select-active': active}"
-    ref="select"
-    v-click-outside="clickOutsideEvent"
+  <div :class="{'select__active': active}"
+       v-click-outside="clickOutsideEvent"
+       ref="select"
+       class="select"
   >
-    <div class="selected-prop" @click="active=!active">
-      <span>{{selectedProp.title ? selectedProp.title : 'Выберите свойство'}}</span>
-      <i class="material-icons arrow" :class="{activeArrow: active}">expand_more</i>
+    <div class="selected-prop" @click="active = !active">
+      <span>{{titleText}}</span>
+      <i :class="{'arrow__active': active}" class="material-icons arrow">expand_more</i>
     </div>
-    <div class="select-options" :class="{optionsActive: active}">
-      <div
-        class="option"
-        v-for="(o, index) in options"
-        :key="o.value"
-        :class="{'option-active': o.value === selectedProp.value}"
-        :style="{borderBottom: index === options.length - 1 ? 0 : '1px solid #dadada'}"
-        @click="selectOption(o)"
+    <div :class="{'select-options__active': active}" class="select-options">
+      <div v-for="(o, index) in options"
+           :key="o.value"
+           :class="{'option__active': o.value === selectedProp.value}"
+           :style="{borderBottom: optionsBorder(index, options.length)}"
+           @click="selectOption(o)"
+           class="option"
       >{{o.title}}</div>
     </div>
   </div>
@@ -29,7 +27,7 @@ export default {
       type: Array,
       required: true,
     },
-    selected: {
+    value: {
       type: Object,
       required: false,
     },
@@ -49,12 +47,21 @@ export default {
     clickOutsideEvent(e) {
       this.active = false;
     },
+    optionsBorder(idx, len){
+      return idx === len - 1 ? 0 : '1px solid #dadada';
+    },
+  },
+  computed: {
+    titleText() {
+      const { title } = this.selectedProp;
+      return title ? title : 'Выберите свойство';
+    }
   },
   mounted() {
-    if (this.$props.selected) {
-      this.selectedProp = this.$props.selected;
-    } else if (this.$props.options.length) {
-      this.selectedProp = this.$props.options[0].title;
+    if (this.value) {
+      this.selectedProp = this.value;
+    } else if (this.options.length) {
+      this.selectedProp = this.options[0];
     }
   },
 };
@@ -75,8 +82,7 @@ $blue-color: #328bca;
   border-radius: 10px;
   transition: 0.1s;
   font-size: 13px;
-
-  &.select-active {
+  &__active {
     border-radius: 0;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
@@ -100,8 +106,7 @@ $blue-color: #328bca;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-
-  &.activeArrow {
+  &__active {
     transform: rotate(180deg);
   }
 }
@@ -126,8 +131,7 @@ $blue-color: #328bca;
   overflow: hidden;
   box-sizing: border-box;
   border: 1px solid $blue-color;
-
-  &.optionsActive {
+  &__active {
     top: 34px;
     opacity: 1;
     z-index: 2;
@@ -142,13 +146,11 @@ $blue-color: #328bca;
   transition: all ease 0.2s;
   box-sizing: border-box;
   background: #fff;
-
   &:hover {
     background: $blue-color;
     color: white;
   }
-
-  &.option-active {
+  &__active {
     font-weight: 600;
   }
 }

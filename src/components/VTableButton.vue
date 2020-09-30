@@ -1,10 +1,9 @@
 <template>
-  <button
-    :type="buttonType"
-    :class="[theme]"
-    @click="$emit('click')"
-    @submit="$emit('submit')"
-    :disabled="disabled"
+  <button :type="buttonType"
+          :class="[theme]"
+          :disabled="disabled"
+          @click="$emit('click')"
+          @submit="$emit('submit')"
   >
     <slot>ОК</slot>
   </button>

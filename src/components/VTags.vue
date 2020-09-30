@@ -1,8 +1,8 @@
 <template>
   <transition-group name="tag"
                     tag="div"
-                    class="tags-row"
-                    v-bind:class="{'tags-row__active':focused}"
+                    class="tags"
+                    :class="{'tags__active':focused}"
   >
     <div :class="{'tags-placeholder__active': isActiveInput}"
          class="tags-placeholder"
@@ -10,10 +10,9 @@
     >{{placeholder}}</div>
     <div v-for="tag in tags" 
          :key="tag.id"
-         class="tag" >
-  
+         class="tag"
+    >
       <div class="tag-name">{{tag.name}}</div>
-
       <transition name="icon-close">
         <i v-if="!disabled"
            @click="$emit('remove-tag', tag.id)"
@@ -67,16 +66,14 @@ export default {
   methods: {
     createTag() {
       const cleanTag = this.tag.trim();
-      if (!cleanTag || this.$props.tags.find((item) => item.name === cleanTag)) {
-        this.tag = '';
-      } else {
+      if (cleanTag && !this.tags.find((item) => item.name === cleanTag)) {
         const tag = {
           name: cleanTag,
           id: Date.now(),
         };
-        this.tag = '';
         this.$emit('create-tag', tag);
       }
+      this.tag = '';
     },
     onBlur(){
       this.focused = false;
@@ -90,7 +87,7 @@ export default {
 $blue-color: #328bca;
 $gray-color: #c2c2c2;
 
-.tags-row {
+.tags {
   display: flex;
   align-items: stretch;
   flex-wrap: wrap;
@@ -108,7 +105,6 @@ $gray-color: #c2c2c2;
     height: 1px;
     border-radius: 5px;
   }
-
   &:after {
     content: "";
     position: absolute;
@@ -120,24 +116,21 @@ $gray-color: #c2c2c2;
     height: 2px;
     border-radius: 5px;
   }
-
   &__active:after {
     transform: translateX(0%);
   }
-}
-
-.tags-placeholder {
-  transition: 0.5s;
-  color: $gray-color;
-  font-size: 15px;
-  position: absolute;
-  left: 0%;
-  top: 48%;
-
-  &__active {
-    top: 0%;
-    font-size: 12px;
-    color: $blue-color;
+  &-placeholder {
+    transition: 0.5s;
+    color: $gray-color;
+    font-size: 15px;
+    position: absolute;
+    left: 0%;
+    top: 48%;
+    &__active {
+      top: 0%;
+      font-size: 12px;
+      color: $blue-color;
+    }
   }
 }
 

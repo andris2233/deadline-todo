@@ -1,16 +1,14 @@
 <template>
-  <div class="input-wrapper" v-bind:class="{'input-active-line': focused}">
-    <div
-      class="input-placeholder"
-      v-bind:class="{'input-placeholder__active': value.trim().length || focused}"
+  <div :class="{'input-wrapper__active': focused}" class="input-wrapper">
+    <div :class="{'input-placeholder__active': isPlaceholderActive}"
+         class="input-placeholder"
     >{{placeholder ? placeholder : 'Text'}}</div>
-    <input
-      type="text"
-      @focus="focused=true"
-      @blur="focused=false"
-      :value="value"
-      @input="$emit('input', $event.target.value)"
-      :disabled="disabled"
+    <input :value="value"
+           :disabled="disabled"
+           @focus="focused = true"
+           @blur="focused = false"
+           @input="$emit('input', $event.target.value)"
+           type="text"
     />
   </div>
 </template>
@@ -27,7 +25,6 @@ export default {
     },
     disabled: {
       type: Boolean,
-      required: false,
       default: false,
     },
   },
@@ -35,6 +32,14 @@ export default {
     return {
       focused: false,
     };
+  },
+  computed:{
+    isPlaceholderActive() {
+      return this.value.trim().length || this.focused;
+    },
+    placeholderText() {
+      return this.placeholder ? this.placeholder : 'Text';
+    }
   },
 };
 </script>
@@ -48,7 +53,6 @@ $blue-color: #328bca;
   min-height: 40px;
   width: 100%;
   overflow: hidden;
-
   &:before {
     content: "";
     position: absolute;
@@ -57,7 +61,6 @@ $blue-color: #328bca;
     background: #c2c2c2;
     width: 100%;
   }
-
   &:after {
     transition: all ease 0.3s;
     content: "";
@@ -68,8 +71,7 @@ $blue-color: #328bca;
     background: $blue-color;
     width: 100%;
   }
-
-  &.input-active-line:after {
+  &__active:after {
     transform: translateX(0%);
   }
 }
@@ -81,8 +83,7 @@ $blue-color: #328bca;
   position: absolute;
   left: 0%;
   top: 48%;
-
-  &.input-placeholder__active {
+  &__active {
     top: 0%;
     font-size: 12px;
     color: $blue-color;

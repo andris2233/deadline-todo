@@ -1,5 +1,9 @@
 <template>
-  <button :type="type" @click="$emit('click')" @submit="$emit('submit')" :disabled="disabled">
+  <button :type="type"
+          :disabled="disabled"
+          @click="$emit('click')"
+          @submit="$emit('submit')"
+  >
     <slot>ОК</slot>
   </button>
 </template>
@@ -32,18 +36,15 @@ button {
   width: 110px;
   outline: none;
   box-shadow: 0 0px 5px $blue-color;
-
   &:hover:enabled {
     transform: scale(1.1);
     background: white;
     box-shadow: 0 0px 10px $blue-color;
     color: $blue-color;
   }
-
   &:active:enabled {
     transform: scale(1);
   }
-
   &:disabled {
     opacity: 0.5;
     cursor: default;
