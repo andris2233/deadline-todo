@@ -33,10 +33,9 @@
       </VFormElementWrapper>
 
       <VFormElementWrapper>
-        <VDatepicker v-model="taskCopy.date"
-                     :disabled="disabled"
-                     :date="taskCopy.date"
-                     :placeholder="label.date"
+        <VCustomDatepicker v-model="taskCopy.date"
+                           :disabled="disabled"
+                           :placeholder="label.date"
         />
       </VFormElementWrapper>
 
@@ -82,7 +81,6 @@
 <script>
 import VTextarea from "@/components/VTextarea";
 import VTags from "@/components/VTags";
-import VDatepicker from "@/components/VDatepicker";
 import VFormHeader from "@/components/VFormHeader";
 import VFormElementWrapper from "@/components/VFormElementWrapper";
 import VFormButton from "@/components/VFormButton";
@@ -90,17 +88,19 @@ import VTableButton from "@/components/VTableButton";
 import VInputText from "@/components/VInputText";
 import VPopup from "@/components/VPopup";
 
+import VCustomDatepicker from "@/components/VCustomDatepicker";
+
 export default {
   components: {
     VTextarea,
     VTags,
-    VDatepicker,
     VFormHeader,
     VFormElementWrapper,
     VTableButton,
     VFormButton,
     VInputText,
     VPopup,
+    VCustomDatepicker,
   },
   data() {
     return {

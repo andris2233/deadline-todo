@@ -28,7 +28,7 @@
           <router-link :to="`/list/task/${task.id}`">{{task.title}}</router-link>
         </div>
         <div class="cell cell__big">{{task.description}}</div>
-        <div class="cell">{{task.date}}</div>
+        <div class="cell">{{task.date | formatDate}}</div>
         <div class="cell">{{task.status | statusFormat}}</div>
         <div class="cell">
           <VTableButton :theme="'green'"
@@ -164,6 +164,21 @@ export default {
           return "Выполненная";
       }
     },
+    formatDate(value){
+      if(!value){
+        return '';
+      }
+      let date;
+      if(value instanceof Date){
+        date = value;
+      } else {
+        date = new Date(value);
+      }
+      const zero = (value) => value < 10 ? `0${value}` : value;
+      let day = zero(date.getDate());
+      let month = zero(date.getMonth() + 1);
+      return `${day}.${month}.${date.getFullYear()}`;
+    }
   },
   methods: {
     popupCommit() {

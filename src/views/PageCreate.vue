@@ -7,6 +7,7 @@
     </VFormElementWrapper>
 
     <div class="create-form__content">
+
       <VFormElementWrapper>
         <VInputText v-model="title"
                     :text="title" 
@@ -30,10 +31,8 @@
       </VFormElementWrapper>
 
       <VFormElementWrapper>
-        <VDatepicker v-model="date"
-                     :placeholder="label.date"
-                     :date="date"
-        />
+        <VCustomDatepicker v-model="date"
+                           :placeholder="label.date"/>
       </VFormElementWrapper>
 
       <VFormButton :type="'button'"
@@ -47,7 +46,7 @@
 <script>
 import VTags from "@/components/VTags";
 import VInputText from "@/components/VInputText";
-import VDatepicker from "@/components/VDatepicker";
+import VCustomDatepicker from "@/components/VCustomDatepicker";
 import VTextarea from "@/components/VTextarea";
 import VFormHeader from "@/components/VFormHeader";
 import VFormButton from "@/components/VFormButton";
@@ -57,11 +56,11 @@ export default {
   components: {
     VTags,
     VInputText,
-    VDatepicker,
     VTextarea,
     VFormHeader,
     VFormButton,
     VFormElementWrapper,
+    VCustomDatepicker,
   },
   data() {
     return {
@@ -119,7 +118,6 @@ export default {
   box-sizing: border-box;
   background: #fff;
   border: 1px solid #dadada;
-  overflow: hidden;
   &__content {
     flex: 1;
     padding: 0 45px 45px 45px;
