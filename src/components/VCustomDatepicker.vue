@@ -11,7 +11,7 @@
          type="text"
          class="datepicker-input"
     >
-      {{value | formatDate}}
+      <div class="datepicker-text">{{value | formatDate}}</div>
       <i v-if="!disabled"
          :class="{'datepicker-clear__active': value}"
          @click.stop="clearDate"
@@ -21,6 +21,7 @@
       </i>
     </div>
     <div :class="calendarClasses"
+         @click.stop
           class="datepicker-container"
     >
       <div class="container-row">
@@ -79,7 +80,7 @@
              :key="indexW"
              class="container-days__row">
           <div v-for="day of week"
-               :key="day.value"
+               :key="day.id"
                :class="checkedDayClass(day.value, day.disabled)"
                @click.stop="saveDate(day, indexW)"
                class="container-days__cell"
@@ -147,10 +148,12 @@ export default {
       let week = [];
       const lastMonth = new Date(date.getTime());
       lastMonth.setDate(0);
+      const id = Date.now();
       for(let i = firstDay; i > 1; i--){
         week.unshift({
           value: lastMonth.getDate(),
-          disabled: true
+          disabled: true,
+          id: id - lastMonth.getDate()
         });
         lastMonth.setDate(lastMonth.getDate() - 1);
       }
@@ -158,9 +161,11 @@ export default {
       while(date.getMonth() === currentMonth){
         while(week.length < 7){
           const day = date.getDate();
+          const disabled = date.getMonth() !== currentMonth;
           week.push({
             value: day,
-            disabled: date.getMonth() !== currentMonth
+            disabled,
+            id: disabled ? id - day : id + day
           });
           date.setDate(day + 1);
         }
@@ -168,16 +173,18 @@ export default {
         week = [];
       }
 
-      if(calendar.length < 6){
+      while(calendar.length < 6){
         while(week.length < 7){
           const day = date.getDate();
           week.push({
             value: day,
-            disabled: true
+            disabled: true,
+            id: id - day
           });
           date.setDate(day + 1);
         }
         calendar.push(week);
+        week = [];
       }
       return calendar;
     }
