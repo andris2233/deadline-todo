@@ -1,16 +1,25 @@
 <template>
   <div class="task-list">
-    <div class="task-list__header">
+    <!-- <div class="task-list__header"> -->
+    <VFormHeader class="task-list__header">
       <div class="haeder__text">Список задач</div>
-      <VSelect v-model="filter"
-               :options="options"
-      />
-    </div>
+      <div class="task-list__header-search">
+        <VSearchBar v-model="searchText"
+                    :placeholder="'Поиск'"
+                    style="margin-right: 5px"/>
+        <VSelect v-model="filter"
+                :options="options"
+                icon/>
+      </div>
+      
+    </VFormHeader>
+      
+    <!-- </div> -->
     <transition-group name="rows" 
                       tag="div" 
                       class="task-list__content"
     >
-      <div class="task-row" :key="'header'">
+      <div class="task-row task-row__header" :key="'header'">
         <div v-for="cell in headerCells"
              :key="cell.title"
              :class="{'cell__big': cell.bigSize}"
@@ -21,6 +30,7 @@
 
       <div v-for="(task, index) in tasks"
            :key="task.id"
+           :style="(index === tasks.length - 1) ? 'border: 0' : ''"
            class="task-row"
       >
         <div class="cell">{{index + 1}}</div>
@@ -62,17 +72,22 @@
         </div>
       </template>
     </component>
+    
+    <VFormFooter />
   </div>
 </template>
 
 <script>
 import VSelect from "@/components/VSelect";
+import VSearchBar from "@/components/VSearchBar";
 import VTableButton from "@/components/VTableButton";
 import VPopup from "@/components/VPopup";
 import VFormButton from "@/components/VFormButton";
+import VFormFooter from "@/components/VFormFooter";
+import VFormHeader from "@/components/VFormHeader";
 
 export default {
-  components: { VSelect, VTableButton, VPopup, VFormButton },
+  components: { VSelect, VTableButton, VPopup, VFormButton, VFormFooter, VFormHeader, VSearchBar },
   data() {
     return {
       options: [
@@ -126,10 +141,15 @@ export default {
       popup: "",
       popupType: "DELETE",
       currentId: null,
+      searchText: '',
     };
   },
   computed: {
-    tasks() {
+    tasks(){
+      const { searchText, tasksFilter} = this;
+      return tasksFilter.filter(t => t.title.includes(searchText) || t.tags.some(tag => tag.name.includes(searchText)));
+    },
+    tasksFilter() {
       if (this.filter.value === "all") {
         return this.$store.getters.getAllTasks;
       }
@@ -215,12 +235,17 @@ export default {
     align-items: center;
     justify-content: space-between;
     padding: 20px;
-    background: #fcfcfc;
-    border-bottom: 1px solid #dadada;
+    &-search{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
   }
   &__content {
+    overflow-y: scroll;
+    overflow-x: hidden;
     position: relative;
-    padding: 0 20px 20px 20px;
+    padding: 0 20px;
     flex: 1;
   }
 }
@@ -238,6 +263,12 @@ export default {
   border-bottom: 1px solid #dadada;
   transition: all 0.4s;
   width: 100%;
+  &__header{
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 2;
+  }
 }
 
 .cell {
@@ -315,5 +346,29 @@ a {
 
 .rows-move {
   transition: transform 0.4s;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background-color: #d4d4d4;
+  box-shadow: inset 0 -3px 5px rgba(0, 0, 0, .2),
+              inset 0 3px 5px rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #c4c4c4;
+  transition: .2s;
+  border-radius: 10px;
 }
 </style>

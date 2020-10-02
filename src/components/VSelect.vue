@@ -5,7 +5,8 @@
        class="select"
   >
     <div class="selected-prop" @click="active = !active">
-      <span>{{titleText}}</span>
+      <i v-if="icon" class="material-icons">filter_list</i>
+      <span>{{`${isPlaceholder} ${titleText}`}}</span>
       <i :class="{'arrow__active': active}" class="material-icons arrow">expand_more</i>
     </div>
     <div :class="{'select-options__active': active}" class="select-options">
@@ -15,7 +16,10 @@
            :style="{borderBottom: optionsBorder(index, options.length)}"
            @click="selectOption(o)"
            class="option"
-      >{{o.title}}</div>
+      >
+        {{o.title}}
+        <i v-if="o.value === selectedProp.value" class="material-icons" style="font-size: 15px">done</i>
+      </div>
     </div>
   </div>
 </template>
@@ -31,12 +35,30 @@ export default {
       type: Object,
       required: false,
     },
+    icon: {
+      type: Boolean,
+      default: false,
+    },
+    placeholder: {
+      type: String,
+      default: ''
+    }
   },
   data() {
     return {
       active: false,
       selectedProp: {},
     };
+  },
+  computed: {
+    isPlaceholder(){
+      // console.log('here');
+      return this.placeholder ? `${this.placeholder}: ` : '';
+    },
+    titleText() {
+      const { title } = this.selectedProp;
+      return title ? title : 'Выберите свойство';
+    },
   },
   methods: {
     selectOption(option) {
@@ -50,12 +72,6 @@ export default {
     optionsBorder(idx, len){
       return idx === len - 1 ? 0 : '1px solid #dadada';
     },
-  },
-  computed: {
-    titleText() {
-      const { title } = this.selectedProp;
-      return title ? title : 'Выберите свойство';
-    }
   },
   mounted() {
     if (this.value) {
@@ -74,19 +90,16 @@ $blue-color: #328bca;
   position: relative;
   width: 270px;
   box-sizing: border-box;
-  background: #fff;
-  border: 1px solid #ccc;
+  background: #e9e9e9;
   z-index: 3;
   cursor: pointer;
   box-sizing: border-box;
-  border-radius: 10px;
+  border-radius: 20px;
   transition: 0.1s;
   font-size: 13px;
   &__active {
-    border-radius: 0;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    border: 1px solid $blue-color;
+    background: #fff;
+    box-shadow: 0 0 3px $blue-color;
     color: $blue-color;
   }
 }
@@ -120,19 +133,18 @@ $blue-color: #328bca;
   opacity: 0;
   transition: all ease 0.2s;
   top: 20px;
-  left: -1px;
+  left: 0px;
   z-index: -1;
   transform-origin: top center;
   transform: scaleY(0);
   background: $blue-color;
   color: #000;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+  border-radius: 4px;
   overflow: hidden;
   box-sizing: border-box;
-  border: 1px solid $blue-color;
+  box-shadow: 0 0 3px $blue-color;
   &__active {
-    top: 34px;
+    top: 45px;
     opacity: 1;
     z-index: 2;
     transform: scaleY(1);
@@ -140,9 +152,12 @@ $blue-color: #328bca;
 }
 
 .option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   cursor: pointer;
   padding: 10px;
-  border-bottom: 1px solid #dadada;
+  // border-bottom: 1px solid #dadada;
   transition: all ease 0.2s;
   box-sizing: border-box;
   background: #fff;
