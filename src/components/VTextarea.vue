@@ -5,7 +5,7 @@
          @click="textareaFocus"
          class="textarea-placeholder"
     >
-      <div v-if="required"
+      <div v-if="required && !disabled"
            class="textarea-placeholder__required">*</div>
       <div class="textarea-placeholder__text">{{placeholder}}</div>
     </div>

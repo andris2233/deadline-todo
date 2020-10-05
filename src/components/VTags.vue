@@ -7,7 +7,7 @@
     <div :class="{'tags-placeholder__active': isActiveInput, 'tags-placeholder__error': isEmptyError}"
          class="tags-placeholder"
          key="placeholder">
-      <div v-if="required"
+      <div v-if="required && !disabled"
            class="tags-placeholder__required">*</div>
       <div class="tags-placeholder__text">{{placeholder}}</div>
     </div>

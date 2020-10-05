@@ -35,7 +35,8 @@
 
       <VFormElementWrapper>
         <VCustomDatepicker v-model="date"
-                           :placeholder="label.date"/>
+                           :placeholder="label.date"
+                           required/>
       </VFormElementWrapper>
 
       <VFormButton :type="'button'"

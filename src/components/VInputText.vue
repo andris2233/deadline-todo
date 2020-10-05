@@ -3,7 +3,7 @@
        class="input-wrapper">
     <div :class="{'input-placeholder__active': isPlaceholderActive, 'input-placeholder__error': isEmptyError}"
          class="input-placeholder">
-      <div v-if="required"
+      <div v-if="required && !disabled"
           class="input-placeholder__required"
       >*</div>
       <div class="input-placeholder__text">{{placeholder}}</div>

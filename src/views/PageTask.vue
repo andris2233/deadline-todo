@@ -4,9 +4,9 @@
       <VFormHeader>
         <div class="task__header">
           <VInputText v-model="taskCopy.title"
-                      :text="taskCopy.title"
                       :placeholder="label.title"
                       :disabled="disabled"
+                      required
           />
           <i @click="disabled=false"
              :class="[disabled ? 'edit__disable' : 'edit__enable']"
@@ -20,6 +20,7 @@
         <VTextarea v-model="taskCopy.description"
                    :disabled="disabled"
                    :placeholder="label.description"
+                   required
         />
       </VFormElementWrapper>
 
@@ -29,6 +30,7 @@
                :placeholder="label.tags"
                @create-tag="createTag"
                @remove-tag="removeTag"
+               required
         />
       </VFormElementWrapper>
 
@@ -36,6 +38,7 @@
         <VCustomDatepicker v-model="taskCopy.date"
                            :disabled="disabled"
                            :placeholder="label.date"
+                           required
         />
       </VFormElementWrapper>
 

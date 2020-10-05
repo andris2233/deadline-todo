@@ -1,13 +1,23 @@
 <template>
   <div @click="onFocus"
+       @keyup.tab="onFocus"
        v-click-outside="hideDatepicker"
        v-window-resize="checkCalendarPosition"
        ref="wrapper"
-       class="datepicker">
-    <label :class="{'datepicker-placeholder__active': value || showDatepicker}"
+       class="datepicker"
+       tabindex="0">
+    <div :class="{'datepicker-placeholder__active': value || showDatepicker, 'datepicker-placeholder__error': isEmptyError}"
            class="datepicker-placeholder"
-    >{{placeholder}}</label>
-    <div :class="{'datepicker-input__active': showDatepicker}"
+    >
+      <div v-if="required && !disabled"
+           class="datepicker-placeholder__required">
+        *
+      </div>
+      <div class="datepicker-placeholder__text">
+        {{placeholder}}
+      </div>
+    </div>
+    <div :class="{'datepicker-input__active': showDatepicker, 'datepicker-input__error': isEmptyError}"
          type="text"
          class="datepicker-input"
     >
@@ -95,28 +105,34 @@
 export default {
   props: {
     value: {
-      default: ''
+      default: '',
     },
     placeholder: {
       type: String,
-      default: 'Date'
+      default: 'Date',
     },
     disabled: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
+    required: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     const date = new Date();
+    const currentDate = new Date();
     date.setDate(1);
     return {
       top: false,
       showDatepicker: false,
-      currentDate: date,
+      currentDate,
       searchedDate: date.getTime(),
       updated: false,
       months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-      dayNames: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
+      dayNames: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+      isEmptyError: false,
     }
   },
   computed: {
@@ -211,8 +227,9 @@ export default {
       this.top = !!(window.innerHeight - this.$refs.wrapper.getBoundingClientRect().bottom < 321);
     },
     clearDate(){
-      // this.checkedDate = null;
       this.$emit('input', null);
+      this.isEmptyError = this.required;
+      this.showDatepicker = false;
     },
     onFocus() {
       if(this.disabled){
@@ -238,7 +255,7 @@ export default {
         classes.push('container-days__cell-disabled');
         classes.push('container-days__cell-interactive');
         return classes;
-       }
+      }
       
       const date = new Date(this.searchedDate);
       date.setDate(day);
@@ -246,15 +263,20 @@ export default {
       if(!(this.value instanceof Date)){
         value = new Date(this.value);
       }
-      if (!value || value.getTime() !== date.getTime()) {
-        classes.push('container-days__cell-interactive');
+      if (value && value.getTime() === date.getTime()) {
+        classes.push('container-days__cell-active');
         return classes;
+      } else if (date.getTime() === this.currentDate.getTime()) {
+        classes.push('container-days__cell-current');
       }
-      classes.push('container-days__cell-active');
+      classes.push('container-days__cell-interactive');
       return classes;
     },
     hideDatepicker() {
-      this.showDatepicker = false;
+      if (this.showDatepicker) {
+        this.isEmptyError = !(this.value && this.required);
+        this.showDatepicker = false;
+      }
       let date;
       if (!this.value) {
         date = new Date();
@@ -286,9 +308,10 @@ export default {
         }
       }
       this.updated = true;
-      this.hideDatepicker();
       date.setDate(day.value);
       this.$emit('input', date);
+      this.hideDatepicker();
+      this.isEmptyError = false;
     }
   },
 }
@@ -301,6 +324,7 @@ $gray-color: #c2c2c2;
 .datepicker{
   position: relative;
   height: 53px;
+  outline: none;
   &-input{
     width: 100%;
     position: absolute;
@@ -338,6 +362,10 @@ $gray-color: #c2c2c2;
     &__active:after {
       transform: translateX(0%);
     }
+    &__error:after {
+      transform: translateX(0%);
+      background: red;
+    }
   }
   &-placeholder{
     position: absolute;
@@ -346,10 +374,19 @@ $gray-color: #c2c2c2;
     font-size: 15px;
     bottom: 10px;
     left: 0;
+    display: flex;
+    align-items: center;
     &__active{
       bottom: 35px;
       font-size: 12px;
       color: $blue-color;
+    }
+    &__error{
+      color: red;
+    }
+    &__required{
+      color: red;
+      margin-right: 3px;
     }
   }
   &-container{
@@ -483,6 +520,9 @@ $gray-color: #c2c2c2;
       cursor: pointer;
       background: $blue-color;
       color: #fff;
+    }
+    &-current {
+      box-shadow: inset 0 0 2px 1px $blue-color;
     }
   }
 }
