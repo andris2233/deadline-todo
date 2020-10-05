@@ -1,13 +1,16 @@
 <template>
-  <transition-group name="tag"
+  <transition-group :class="{'tags__active': focused, 'tags__error': isEmptyError}"
+                    name="tag"
                     tag="div"
                     class="tags"
-                    :class="{'tags__active':focused}"
   >
-    <div :class="{'tags-placeholder__active': isActiveInput}"
+    <div :class="{'tags-placeholder__active': isActiveInput, 'tags-placeholder__error': isEmptyError}"
          class="tags-placeholder"
-         key="placeholder"
-    >{{placeholder}}</div>
+         key="placeholder">
+      <div v-if="required"
+           class="tags-placeholder__required">*</div>
+      <div class="tags-placeholder__text">{{placeholder}}</div>
+    </div>
     <div v-for="tag in tags" 
          :key="tag.id"
          class="tag"
@@ -15,7 +18,7 @@
       <div class="tag-name">{{tag.name}}</div>
       <transition name="icon-close">
         <i v-if="!disabled"
-           @click="$emit('remove-tag', tag.id)"
+           @click="onRemove(tag.id)"
            class="material-icons tag-icon"
         >close</i>
       </transition>
@@ -43,12 +46,14 @@ export default {
     },
     placeholder: {
       type: String,
-      required: false,
       default: 'Tags',
     },
     disabled: {
       type: Boolean,
-      required: false,
+      default: false,
+    },
+    required: {
+      type: Boolean,
       default: false,
     },
   },
@@ -56,6 +61,7 @@ export default {
     return {
       tag: '',
       focused: false,
+      isEmptyError: false,
     };
   },
   computed: {
@@ -72,13 +78,23 @@ export default {
           id: Date.now(),
         };
         this.$emit('create-tag', tag);
+        this.isEmptyError = false;
       }
       this.tag = '';
     },
-    onBlur(){
+    onBlur() {
       this.focused = false;
       this.createTag();
+      if (this.required && !this.tags.length) {
+        this.isEmptyError = true;
+      }
     },
+    onRemove(id) {
+      this.$emit('remove-tag', id);
+      if (this.required) {
+        this.isEmptyError = !(this.tags.length - 1);
+      }
+    }
   },
 };
 </script>
@@ -119,6 +135,10 @@ $gray-color: #c2c2c2;
   &__active:after {
     transform: translateX(0%);
   }
+  &__error:after {
+    transform: translateX(0%);
+    background: red;
+  }
   &-placeholder {
     transition: 0.5s;
     color: $gray-color;
@@ -126,10 +146,19 @@ $gray-color: #c2c2c2;
     position: absolute;
     left: 0%;
     top: 48%;
+    display: flex;
+    align-items: center;
     &__active {
       top: 0%;
       font-size: 12px;
       color: $blue-color;
+    }
+    &__error {
+      color: red;
+    }
+    &__required {
+      color: red;
+      margin-right: 3px;
     }
   }
 }

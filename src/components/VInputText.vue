@@ -1,13 +1,18 @@
 <template>
-  <div :class="{'input-wrapper__active': focused}" class="input-wrapper">
-    <div :class="{'input-placeholder__active': isPlaceholderActive}"
-         class="input-placeholder"
-    >{{placeholder ? placeholder : 'Text'}}</div>
+  <div :class="{'input-wrapper__active': focused, 'input-wrapper__error': isEmptyError}"
+       class="input-wrapper">
+    <div :class="{'input-placeholder__active': isPlaceholderActive, 'input-placeholder__error': isEmptyError}"
+         class="input-placeholder">
+      <div v-if="required"
+          class="input-placeholder__required"
+      >*</div>
+      <div class="input-placeholder__text">{{placeholder}}</div>
+    </div>
     <input :value="value"
            :disabled="disabled"
            @focus="focused = true"
-           @blur="focused = false"
-           @input="$emit('input', $event.target.value)"
+           @blur="onBlur"
+           @input="onInput($event.target.value)"
            type="text"
     />
   </div>
@@ -27,20 +32,36 @@ export default {
       type: Boolean,
       default: false,
     },
+    required: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
       focused: false,
+      isEmptyError: false
     };
   },
   computed:{
     isPlaceholderActive() {
       return this.value.trim().length || this.focused;
     },
-    placeholderText() {
-      return this.placeholder ? this.placeholder : 'Text';
-    }
   },
+  methods: {
+    onInput(value) {
+      this.$emit('input', value);
+      if (this.required) {
+        this.isEmptyError = !(value.trim());
+      }
+    },
+    onBlur() {
+      this.focused = false;
+      if(this.required && !this.value.trim()){
+        this.isEmptyError = true;
+      }
+    },
+  }
 };
 </script>
 
@@ -74,6 +95,10 @@ $blue-color: #328bca;
   &__active:after {
     transform: translateX(0%);
   }
+  &__error:after{
+    background: red;
+    transform: translateX(0%);
+  }
 }
 
 .input-placeholder {
@@ -83,10 +108,21 @@ $blue-color: #328bca;
   position: absolute;
   left: 0%;
   top: 48%;
+  display: flex;
+  // color: $blue-color;
+  align-items: center;
   &__active {
     top: 0%;
     font-size: 12px;
     color: $blue-color;
+  }
+  &__error {
+    color: red;
+  }
+  &__required{
+    color: red;
+    margin-right: 3px;
+    // font-size: 20px;
   }
 }
 

@@ -11,7 +11,8 @@
       <VFormElementWrapper>
         <VInputText v-model="title"
                     :text="title" 
-                    :placeholder="label.title" 
+                    :placeholder="label.title"
+                    required
         />
       </VFormElementWrapper>
 
@@ -19,6 +20,7 @@
         <VTextarea v-model="description"
                    :text="description" 
                    :placeholder="label.description"
+                   required
         />
       </VFormElementWrapper>
 
@@ -27,6 +29,7 @@
                :placeholder="label.tags"
                @create-tag="createTag"
                @remove-tag="removeTag"
+               required
         />
       </VFormElementWrapper>
 

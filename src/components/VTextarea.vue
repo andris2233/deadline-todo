@@ -1,14 +1,19 @@
 <template>
-  <div :class="{'textarea-wrapper__active': focused}" class="textarea-wrapper">
-    <div :class="{'textarea-placeholder__active': focused || value.trim().length}"
+  <div :class="{'textarea-wrapper__active': focused, 'textarea-wrapper__error': isEmptyError}"
+       class="textarea-wrapper">
+    <div :class="{'textarea-placeholder__active': placeholderActive, 'textarea-placeholder__error': isEmptyError}"
          @click="textareaFocus"
          class="textarea-placeholder"
-    >{{placeholder}}</div>
+    >
+      <div v-if="required"
+           class="textarea-placeholder__required">*</div>
+      <div class="textarea-placeholder__text">{{placeholder}}</div>
+    </div>
     <textarea :value="value"
               :disabled="disabled"
               @focus="focused=true"
-              @blur="focused=false"
-              @input="$emit('input', $event.target.value);"
+              @blur="onBlur"
+              @input="onInput($event.target.value)"
               ref="textarea"
               class="textarea"
     ></textarea>
@@ -29,11 +34,21 @@ export default {
       type: Boolean,
       default: false,
     },
+    required: {
+      type: Boolean,
+      default: false,
+    }
   },
   data() {
     return {
       focused: false,
+      isEmptyError: false,
     };
+  },
+  computed: {
+    placeholderActive() {
+      return !!(this.focused || this.value.trim().length);
+    }
   },
   methods: {
     textareaFocus() {
@@ -41,6 +56,18 @@ export default {
         this.$refs.textarea.focus();
       }
     },
+    onInput(value) {
+      this.$emit('input', value);
+      if (this.required) {
+        this.isEmptyError = !value.trim();
+      }
+    },
+    onBlur() {
+      this.focused = false;
+      if (this.required && !this.value.trim()) {
+        this.isEmptyError = true;
+      }
+    }
   },
 };
 </script>
@@ -64,9 +91,12 @@ $gray-color: #c2c2c2;
   overflow: hidden;
   background: #fff;
   &__active {
-    background: #fff;
     border: 1px solid $blue-color;
     box-shadow: 0 0 0 1px $blue-color;
+  }
+  &__error {
+    border: 1px solid red;
+    box-shadow: 0 0 0 1px red;
   }
 }
 
@@ -81,14 +111,23 @@ $gray-color: #c2c2c2;
   &-placeholder {
     transition: 0.5s;
     color: $gray-color;
-    font-size: 16px;
+    font-size: 15px;
     position: absolute;
     left: 10px;
     top: 100px;
+    display: flex;
+    align-items: center;
     &__active {
       top: 5px;
       font-size: 12px;
       color: $blue-color;
+    }
+    &__error{
+      color: red;
+    }
+    &__required{
+      color: red;
+      margin-right: 3px;
     }
   }
 }

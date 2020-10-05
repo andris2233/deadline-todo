@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <div class="nav__header">Задачи</div>
+    <div class="nav">
+      <div class="nav__header">Задачи <i class="material-icons">done</i></div>
       <div class="nav-menu">
         <router-link to="/" class="nav-link" exact>Создать</router-link>
         <router-link to="/list" class="nav-link">Список</router-link>
@@ -26,7 +26,7 @@
   background: #383838;
 }
 
-#nav {
+.nav {
   padding-left: 15px;
   background: #328bca;
   display: flex;
@@ -37,38 +37,33 @@
   margin-bottom: 15px;
   width: 100%;
   box-sizing: border-box;
-
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 25px;
+    font-weight: 600;
+  }
+  &-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all ease 0.3s;
+    font-weight: bold;
+    color: #fff;
+    text-decoration: none;
+    width: 90px;
+    height: 70px;
+    &:hover {
+      background: #49a0de;
+    }
+  }
+  &-menu {
+    display: flex;
+  }
   a.router-link-active {
     background: #1d6ca5;
-  }
-}
-
-.nav__header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 25px;
-  font-weight: 600;
-}
-
-.nav-menu {
-  display: flex;
-}
-
-.nav-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all ease 0.3s;
-  font-weight: bold;
-  color: #fff;
-  text-decoration: none;
-  width: 90px;
-  height: 70px;
-
-  &:hover {
-    background: #49a0de;
   }
 }
 
