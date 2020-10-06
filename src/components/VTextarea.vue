@@ -58,9 +58,6 @@ export default {
     },
     onInput(value) {
       this.$emit('input', value);
-      if (this.required) {
-        this.isEmptyError = !value.trim();
-      }
     },
     onBlur() {
       this.focused = false;
@@ -68,6 +65,13 @@ export default {
         this.isEmptyError = true;
       }
     }
+  },
+  watch: {
+    value() {
+      if (this.required) {
+        this.isEmptyError = !this.value.trim();
+      }
+    },
   },
 };
 </script>

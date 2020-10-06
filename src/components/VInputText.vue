@@ -51,17 +51,21 @@ export default {
   methods: {
     onInput(value) {
       this.$emit('input', value);
-      if (this.required) {
-        this.isEmptyError = !(value.trim());
-      }
     },
     onBlur() {
       this.focused = false;
-      if(this.required && !this.value.trim()){
-        this.isEmptyError = true;
+      if(this.required){
+        this.isEmptyError = !this.value.trim();
       }
     },
-  }
+  },
+  watch: {
+    value() {
+      if (this.required) {
+        this.isEmptyError = !this.value.trim();
+      }
+    },
+  },
 };
 </script>
 

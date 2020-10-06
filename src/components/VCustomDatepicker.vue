@@ -105,6 +105,7 @@
 export default {
   props: {
     value: {
+      type: [Date, String],
       default: '',
     },
     placeholder: {
@@ -228,7 +229,7 @@ export default {
     },
     clearDate(){
       this.$emit('input', null);
-      this.isEmptyError = this.required;
+      // this.isEmptyError = this.required;
       this.showDatepicker = false;
     },
     onFocus() {
@@ -314,6 +315,13 @@ export default {
       this.isEmptyError = false;
     }
   },
+  watch: {
+    value() {
+      if (this.required) {
+        this.isEmptyError = !this.value;
+      }
+    }
+  }
 }
 </script>
 

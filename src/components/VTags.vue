@@ -78,7 +78,6 @@ export default {
           id: Date.now(),
         };
         this.$emit('create-tag', tag);
-        this.isEmptyError = false;
       }
       this.tag = '';
     },
@@ -91,10 +90,14 @@ export default {
     },
     onRemove(id) {
       this.$emit('remove-tag', id);
-      if (this.required) {
-        this.isEmptyError = !(this.tags.length - 1);
+    },
+  },
+  watch: {
+    tags() {
+      if(this.required){
+        this.isEmptyError = !this.tags.length;
       }
-    }
+    },
   },
 };
 </script>
