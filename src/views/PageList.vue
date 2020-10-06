@@ -1,6 +1,5 @@
 <template>
   <div class="task-list">
-    <!-- <div class="task-list__header"> -->
     <VFormHeader class="task-list__header">
       <div class="haeder__text">Список задач</div>
       <div class="task-list__header-search">
@@ -11,10 +10,7 @@
                 :options="options"
                 icon/>
       </div>
-      
     </VFormHeader>
-      
-    <!-- </div> -->
     <transition-group name="rows" 
                       tag="div" 
                       class="task-list__content"
@@ -27,7 +23,6 @@
         >{{cell.title}}
         </div>
       </div>
-
       <div v-for="(task, index) in tasks"
            :key="task.id"
            :style="(index === tasks.length - 1) ? 'border: 0' : ''"
@@ -35,11 +30,11 @@
       >
         <div class="cell">{{index + 1}}</div>
         <div class="cell">
-          <router-link :to="`/list/task/${task.id}`">{{task.title}}</router-link>
+          <VLink :to="`/list/task/${task.id}`">{{task.title}}</VLink>
         </div>
         <div class="cell cell__big">{{task.description}}</div>
         <div class="cell">{{task.date | formatDate}}</div>
-        <div class="cell">{{task.status | statusFormat}}</div>
+        <div :class="task.status | statusClass" class="cell">{{task.status | statusFormat}}</div>
         <div class="cell">
           <VTableButton :theme="'green'"
                         :disabled="task.status==='completed'"
@@ -85,9 +80,10 @@ import VPopup from "@/components/VPopup";
 import VFormButton from "@/components/VFormButton";
 import VFormFooter from "@/components/VFormFooter";
 import VFormHeader from "@/components/VFormHeader";
+import VLink from "@/components/VLink";
 
 export default {
-  components: { VSelect, VTableButton, VPopup, VFormButton, VFormFooter, VFormHeader, VSearchBar },
+  components: { VSelect, VTableButton, VPopup, VFormButton, VFormFooter, VFormHeader, VSearchBar, VLink, },
   data() {
     return {
       options: [
@@ -174,15 +170,18 @@ export default {
     },
   },
   filters: {
-    statusFormat(task) {
-      switch (task) {
-        case "active":
-          return "Активная";
-        case "expired":
-          return "Просроченная";
-        case "completed":
-          return "Выполненная";
+    statusFormat(status) {
+      switch (status) {
+        case 'active':
+          return 'Активная';
+        case 'expired':
+          return 'Просроченная';
+        case 'completed':
+          return 'Выполненная';
       }
+    },
+    statusClass(status){
+      return `cell__${status}`;
     },
     formatDate(value){
       if(!value){
@@ -277,37 +276,20 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  &__header{
+  &__header {
     font-weight: 600;
   }
-  &__big{
+  &__big {
     flex: 2;
   }
-}
-
-a {
-  display: inline-block;
-  color: green;
-  text-decoration: none;
-  overflow: hidden;
-  transition: 0.2s;
-  position: relative;
-  &:visited {
+  &__active {
+    color: orange;
+  }
+  &__expired {
+    color: brown;
+  }
+  &__completed {
     color: green;
-  }
-  &:after {
-    content: "";
-    height: 2px;
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    background: green;
-    transform: scaleX(0);
-    transition: 0.2s;
-  }
-  &:hover:after {
-    transform: scaleX(1);
   }
 }
 
@@ -352,13 +334,11 @@ a {
   width: 10px;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
   box-shadow: inset 0 0 5px grey;
   border-radius: 10px;
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
   background-color: #d4d4d4;
   box-shadow: inset 0 -3px 5px rgba(0, 0, 0, .2),
