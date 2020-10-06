@@ -334,6 +334,7 @@ $gray-color: #c2c2c2;
   height: 53px;
   outline: none;
   &-input{
+    cursor: text;
     width: 100%;
     position: absolute;
     bottom: 0;
@@ -384,6 +385,7 @@ $gray-color: #c2c2c2;
     left: 0;
     display: flex;
     align-items: center;
+    cursor: text;
     &__active{
       bottom: 35px;
       font-size: 12px;

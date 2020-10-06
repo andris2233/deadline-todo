@@ -325,8 +325,8 @@ export default {
 .cell {
   text-align: left;
   flex: 1;
-  // white-space: nowrap;
-  // text-overflow: ellipsis;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   overflow: hidden;
   display: flex;
   align-items: center;
