@@ -20,7 +20,14 @@
              :key="cell.title"
              :class="{'cell__big': cell.bigSize}"
              class="cell cell__header"
-        >{{cell.title}}
+        >
+          {{cell.title}}
+          <VSortArrow v-if="cell.sort"
+                      :top="cell.sort.forward"
+                      :active="cell.sort.name===currentSort"
+                      @click.native="sort(cell.sort.name)"
+                      class="arrow-margin"
+          />
         </div>
       </div>
       <div v-for="(task, index) in tasks"
@@ -81,9 +88,20 @@ import VFormButton from "@/components/VFormButton";
 import VFormFooter from "@/components/VFormFooter";
 import VFormHeader from "@/components/VFormHeader";
 import VLink from "@/components/VLink";
+import VSortArrow from "@/components/VSortArrow";
 
 export default {
-  components: { VSelect, VTableButton, VPopup, VFormButton, VFormFooter, VFormHeader, VSearchBar, VLink, },
+  components: {
+    VSelect,
+    VTableButton,
+    VPopup,
+    VFormButton,
+    VFormFooter,
+    VFormHeader,
+    VSearchBar,
+    VLink,
+    VSortArrow,
+  },
   data() {
     return {
       options: [
@@ -112,6 +130,10 @@ export default {
         {
           title: 'Название',
           bigSize: false,
+          sort: {
+            name: 'title',
+            forward: true,
+          },
         },
         {
           title: 'Опсиание',
@@ -120,6 +142,10 @@ export default {
         {
           title: 'Дедлайн',
           bigSize: false,
+          sort: {
+            name: 'date',
+            forward: true,
+          },
         },
         {
           title: 'Статус',
@@ -131,18 +157,33 @@ export default {
         },
       ],
       filter: {
-        title: "Все",
-        value: "all",
+        title: 'Все',
+        value: 'all',
       },
-      popup: "",
-      popupType: "DELETE",
+      currentSort: '',
+      popup: '',
+      popupType: 'DELETE',
       currentId: null,
       searchText: '',
     };
   },
   computed: {
-    tasks(){
-      const { searchText, tasksFilter} = this;
+    tasks() {
+      const { currentSort, tasksSearch, headerCells } = this;
+      if (!currentSort) {
+        return tasksSearch;
+      }
+      const idx = headerCells.findIndex(head => head.sort && head.sort.name === currentSort);
+      return tasksSearch.sort(function(a, b) {
+        if (a[currentSort] < b[currentSort]) {
+          return headerCells[idx].sort.forward ? 1 : -1;
+        } else {
+          return headerCells[idx].sort.forward ? -1 : 1;
+        }
+      });
+    },
+    tasksSearch() {
+      const { searchText, tasksFilter } = this;
       return tasksFilter.filter(t => t.title.includes(searchText) || t.tags.some(tag => tag.name.includes(searchText)));
     },
     tasksFilter() {
@@ -187,12 +228,7 @@ export default {
       if(!value){
         return '';
       }
-      let date;
-      if(value instanceof Date){
-        date = value;
-      } else {
-        date = new Date(value);
-      }
+      const date = value instanceof Date ? value : new Date(value);
       const zero = (value) => value < 10 ? `0${value}` : value;
       let day = zero(date.getDate());
       let month = zero(date.getMonth() + 1);
@@ -200,6 +236,22 @@ export default {
     }
   },
   methods: {
+    sort(type) {
+      if (this.currentSort === type) {
+        const idx = this.headerCells.findIndex(head => head.sort && head.sort.name === type);
+        this.headerCells[idx].sort.forward = !this.headerCells[idx].sort.forward;
+      } else if (this.currentSort) {
+        const idx = this.headerCells.findIndex(head => head.sort && head.sort.name === this.currentSort);
+        this.headerCells[idx].sort.forward = true;
+        this.currentSort = type;
+      } else {
+        this.currentSort = type;
+      }
+    },
+    changeSort(type) {
+      const idx = this.headerCells.findIndex(head => head.sort && head.sort.name === type);
+      this.headerCells[idx].sort.forward = true;
+    },
     popupCommit() {
       if (this.popupType === "DELETE") {
         this.$store.dispatch("removeTask", this.currentId);
@@ -273,9 +325,11 @@ export default {
 .cell {
   text-align: left;
   flex: 1;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  // white-space: nowrap;
+  // text-overflow: ellipsis;
   overflow: hidden;
+  display: flex;
+  align-items: center;
   &__header {
     font-weight: 600;
   }
@@ -291,6 +345,10 @@ export default {
   &__completed {
     color: green;
   }
+}
+
+.arrow-margin {
+  margin-left: 5px;
 }
 
 .button-margin {
